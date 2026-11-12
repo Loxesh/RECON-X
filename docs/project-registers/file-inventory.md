@@ -29,6 +29,11 @@
 | backend/app/core/database.py | MongoDB client creation, ping and shutdown utilities |
 | backend/app/observability/__init__.py | Observability package |
 | backend/app/observability/health.py | MongoDB readiness status helper |
+
+## MongoDB Document Models
+
+| File | Purpose |
+|---|---|
 | backend/app/models/__init__.py | MongoDB document models package |
 | backend/app/models/base.py | Shared document fields, ObjectId validation and tenant document base |
 | backend/app/models/enums.py | Shared model enumerations |
@@ -48,6 +53,24 @@
 | backend/app/models/audit_event.py | Audit event, actor and resource models |
 | backend/app/models/report.py | Generated reconciliation report and signoff models |
 | backend/app/models/llm_usage.py | LLM usage and estimated cost tracking model |
+
+## API Schemas
+
+| File | Purpose |
+|---|---|
+| backend/app/schemas/__init__.py | API schemas package |
+| backend/app/schemas/common.py | Shared API response and pagination schemas |
+| backend/app/schemas/upload.py | Upload request metadata and response schemas |
+| backend/app/schemas/job.py | Reconciliation job request, response and period schemas |
+| backend/app/schemas/transaction.py | Transaction response, filters and amount summary schemas |
+| backend/app/schemas/exception.py | Exception response, filters, assignment and status update schemas |
+| backend/app/schemas/investigation.py | Investigation request, response and validation schemas |
+| backend/app/schemas/report.py | Report generation request, response and signoff schemas |
+
+## Backend Tests
+
+| File | Purpose |
+|---|---|
 | backend/tests/test_health.py | API health and database readiness tests |
 | backend/tests/test_models.py | Collection model, tenant ownership and financial precision tests |
 
@@ -80,6 +103,7 @@
 | File | Purpose |
 |---|---|
 | docs/operations/mongodb-atlas.md | MongoDB Atlas development setup and connection verification |
+| docs/operations/mongodb-collection-schemas.md | Field definitions and sample documents for all 15 MongoDB collections |
 
 ## Project Registers
 
@@ -100,7 +124,8 @@
 - PyMongo is the approved synchronous MongoDB driver.
 - The FastAPI application manages one MongoDB client through its lifespan.
 - Document models are defined for all 15 RECON X collections.
+- API request and response schemas are maintained separately from MongoDB document models.
 - Financial values use Python Decimal and MongoDB Decimal128.
 - Tenant-owned document models require an organization ID.
-- Database collections, indexes and tenant-scoped repositories will be implemented in subsequent chapters.
+- Database indexes and tenant-scoped repositories are part of the subsequent implementation chapters.
 - Additional modules will be recorded as implementation progresses.
