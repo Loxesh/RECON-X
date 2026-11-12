@@ -33,7 +33,7 @@
 
 | File | Purpose | Git Status |
 |---|---|---|
-| backend/.env | Local development configuration | Ignored |
+| backend/.env | Local application and MongoDB Atlas configuration | Ignored |
 | backend/.env.example | Shareable configuration template | Trackable |
 
 ## Frontend Files
@@ -53,6 +53,12 @@
 | frontend/public/icons.svg | Icon asset |
 | frontend/src/assets/ | Frontend assets |
 
+## Operations Documentation
+
+| File | Purpose |
+|---|---|
+| docs/operations/mongodb-atlas.md | MongoDB Atlas development setup and connection verification |
+
 ## Project Registers
 
 | File | Purpose |
@@ -68,4 +74,7 @@
 - Local `.env` files must never be committed.
 - `.env.example` must contain safe placeholders only.
 - The frontend uses JavaScript and JSX, not TypeScript.
+- MongoDB Atlas is used as the development database.
+- PyMongo is the approved synchronous MongoDB driver.
+- Database lifecycle management, collections, indexes and tenant-scoped repositories will be implemented in subsequent chapters.
 - Additional modules will be recorded as implementation progresses.

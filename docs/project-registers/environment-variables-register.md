@@ -5,9 +5,9 @@
 
 ## Current Status
 
-The Chapter 08 environment and secret-handling baseline has been implemented.
+Environment configuration and MongoDB Atlas development connectivity have been implemented.
 
-The backend uses Pydantic Settings to load configuration from `backend/.env`. The local `.env` file is excluded from Git, while `.env.example` is retained as a tracked configuration template.
+The backend uses Pydantic Settings to load configuration from `backend/.env`. The local `.env` file is excluded from Git, while `.env.example` contains safe placeholders.
 
 ## Implemented Variables
 
@@ -19,13 +19,14 @@ The backend uses Pydantic Settings to load configuration from `backend/.env`. Th
 | ENVIRONMENT | Backend | Runtime environment | No | Implemented |
 | DEBUG | Backend | FastAPI debug configuration | No | Implemented |
 | SECRET_KEY | Backend | Local development security placeholder | Yes | Placeholder only |
+| MONGODB_URI | Backend | MongoDB Atlas connection URI | Yes | Configured and connection verified |
+| MONGODB_DATABASE | Backend | Application database name | No | Configured: RECON_X_DEV |
 
 ## Planned Variables
 
 | Variable | Scope | Purpose | Status |
 |---|---|---|---|
-| MONGODB_URI | Backend | MongoDB Atlas connection | Planned |
-| MONGODB_DATABASE | Backend | Database name | Planned |
+| MONGODB_MAX_POOL_SIZE | Backend | MongoDB connection pool limit | Planned |
 | REDIS_URL | Backend | Redis connection | Planned |
 | JWT_SECRET_KEY | Backend | Authentication token signing | Planned |
 | OBJECT_STORAGE_PROVIDER | Backend | Object storage provider | Planned |
@@ -42,9 +43,14 @@ The backend uses Pydantic Settings to load configuration from `backend/.env`. Th
 - Never print secret values in logs or terminal verification commands.
 - Register new environment variables whenever configuration is introduced.
 - Do not use development placeholders as production credentials.
+- Use the restricted application database user for backend database access.
+- Never use the Atlas Admin account in application code.
 
 ## Notes
 
-- The local `.env` file currently contains dummy development values only.
-- Database, Redis, authentication, storage and LLM integrations are not configured yet.
-- Planned variables must be validated and introduced in their relevant implementation chapters.
+- MongoDB Atlas development cluster: `reconx-dev`.
+- Database: `RECON_X_DEV`.
+- Application database user: `reconx_app_user`.
+- The MongoDB connection was successfully verified using PyMongo.
+- Database lifecycle management, collections, indexes and repositories are not yet implemented.
+- Planned variables must be introduced in their relevant implementation chapters.
