@@ -13,7 +13,7 @@
 | 06 | Frontend foundation | Created React + Vite JavaScript application; production build passed | Completed |
 | 07 | Styling foundation | Configured Tailwind v4, global design tokens and initial dashboard shell; desktop and mobile visually checked; production build passed; Git checkpoint created | Completed |
 | 08 | Environment and secret handling | Created environment template and local configuration, implemented Pydantic Settings loader, integrated settings with FastAPI, verified Git secret protection and backend tests; Git checkpoint created | Completed |
-| 09 | MongoDB Atlas setup | Created Atlas development project and M0 cluster, configured restricted application user, stored connection URI locally, verified PyMongo Atlas ping, documented setup and registered dependencies | Implementation verified; Git checkpoint pending |
+| 09 | MongoDB Atlas setup | Created Atlas development project and M0 cluster, configured restricted application user, stored connection URI locally, verified PyMongo Atlas ping, documented setup, registered dependencies; Git commit bb16461 | Completed |
 
 ## Chapter 07 Verification
 
@@ -65,6 +65,8 @@
 - Updated environment variables register.
 - Updated file inventory.
 - Git checkpoint pending.
+- Git checkpoint successfully created: `bb16461`.
+- Working tree verified clean.
 
 ## Known Issues
 
