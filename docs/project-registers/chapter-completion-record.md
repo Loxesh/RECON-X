@@ -16,6 +16,7 @@
 | 09 | MongoDB Atlas setup | Created Atlas development project and M0 cluster, configured restricted application user, stored connection URI locally, verified PyMongo Atlas ping, documented setup, registered dependencies; Git commit bb16461 and documentation closure | Completed |
 | 10 | MongoDB fundamentals and Compass inspection | Standalone Compass installation and CRUD learning exercises deferred; database concepts will be covered during implementation | Deferred |
 | 11 | PyMongo connection and health checks | Implemented MongoDB client lifecycle, connection settings, ping, FastAPI lifespan integration and readiness endpoint; 2 tests passed; live Atlas readiness verified; implementation commit bbe09d5 | Completed |
+| 12 | Define document models and 15 collections | Created all 15 Pydantic collection models, shared BSON/Decimal128 helpers, and consolidated model tests. Backend suite: 8 passed. | Complete |
 
 ## Chapter 07 Verification
 
