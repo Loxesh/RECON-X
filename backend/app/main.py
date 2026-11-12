@@ -1,18 +1,22 @@
 
 from fastapi import FastAPI
 
+from app.core.config import settings
+
+
 app = FastAPI(
-    title="RECON X API",
+    title=settings.app_name,
     description=(
         "Financial reconciliation and "
         "discrepancy investigation platform."
     ),
-    version="0.1.0",
+    version=settings.app_version,
+    debug=settings.debug,
 )
 
 
 @app.get(
-    "/api/v1/health",
+    f"{settings.api_v1_prefix}/health",
     tags=["Health"],
     summary="Check API health",
 )

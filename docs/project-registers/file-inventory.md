@@ -1,4 +1,5 @@
-﻿# RECON X - File Inventory
+﻿
+# RECON X - File Inventory
 
 **Last Updated:** 12 November 2026
 
@@ -20,10 +21,20 @@
 
 | File | Purpose |
 |---|---|
+| backend/.env.example | Safe local environment configuration template |
 | backend/pyproject.toml | Python project configuration and dependencies |
 | backend/app/__init__.py | Backend application package |
 | backend/app/main.py | FastAPI application and health endpoint |
+| backend/app/core/__init__.py | Core configuration package |
+| backend/app/core/config.py | Central Pydantic Settings configuration loader |
 | backend/tests/test_health.py | Health endpoint test |
+
+## Local Development Files
+
+| File | Purpose | Git Status |
+|---|---|---|
+| backend/.env | Local development configuration | Ignored |
+| backend/.env.example | Shareable configuration template | Trackable |
 
 ## Frontend Files
 
@@ -38,9 +49,9 @@
 | frontend/src/App.jsx | Initial RECON X dashboard shell |
 | frontend/src/App.css | Reusable component styles |
 | frontend/src/index.css | Global styles and design tokens |
-| frontend/public/favicon.svg | Vite starter favicon asset |
-| frontend/public/icons.svg | Vite starter icon asset |
-| frontend/src/assets/ | Initial Vite starter assets |
+| frontend/public/favicon.svg | Favicon asset |
+| frontend/public/icons.svg | Icon asset |
+| frontend/src/assets/ | Frontend assets |
 
 ## Project Registers
 
@@ -54,5 +65,7 @@
 ## Notes
 
 - Python virtual environments, node_modules and frontend dist output are excluded from Git.
+- Local `.env` files must never be committed.
+- `.env.example` must contain safe placeholders only.
 - The frontend uses JavaScript and JSX, not TypeScript.
 - Additional modules will be recorded as implementation progresses.
