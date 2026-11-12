@@ -1,0 +1,60 @@
+
+/* RECON X component-level styles */
+
+/* Smooth interactive transitions */
+button,
+a,
+input,
+select,
+textarea {
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+/* Reusable application surface */
+.rx-surface {
+  background: #ffffff;
+  border: 1px solid #e5eaf2;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(16, 28, 53, 0.05);
+}
+
+/* Reusable page container */
+.rx-page {
+  width: 100%;
+  min-height: 100vh;
+  background: #f5f7fb;
+}
+
+/* Reusable muted text */
+.rx-muted {
+  color: #64748b;
+}
+
+/* Reusable primary button */
+.rx-primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.rx-primary-button:hover {
+  background: #1d4ed8;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.rx-primary-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
