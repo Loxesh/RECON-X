@@ -2,34 +2,40 @@
 from datetime import datetime
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field, model_validator
 
 from app.models.base import TenantDocument
 
-
 class ReconciliationPeriod(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    """Date range covered by a reconciliation job."""
 
     start_date: datetime
     end_date: datetime
 
+    @model_validator(mode="after")
+    def validate_period(self):
+        if self.start_date > self.end_date:
+            raise ValueError(
+                "Period start date cannot be after end date."
+            )
+        return self
 
-class ReconciliationFiles(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+class ReconciliationFileIds(BaseModel):
+    """Uploaded files selected for reconciliation."""
 
     bank: str | None = None
     ledger: str | None = None
     gateway: str | None = None
 
-
 class ReconciliationJobDocument(TenantDocument):
-    name: str = Field(min_length=1, max_length=150)
+    """MongoDB document representing a reconciliation job."""
+
+    name: str = Field(min_length=2, max_length=150)
     period: ReconciliationPeriod
     status: str = "PENDING"
-
     idempotency_key: str = Field(min_length=1)
-    file_ids: ReconciliationFiles
 
+    file_ids: ReconciliationFileIds
     rules_snapshot: dict[str, Any] = Field(default_factory=dict)
     stats: dict[str, Any] = Field(default_factory=dict)
 

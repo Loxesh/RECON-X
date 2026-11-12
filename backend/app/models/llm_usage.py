@@ -1,13 +1,16 @@
 
+from datetime import datetime
 from decimal import Decimal
 
 from pydantic import Field
 
-from app.models.base import TenantDocument
+from app.models.base import TenantDocument, utc_now
 from app.models.bson import Money
 
 
 class LLMUsageDocument(TenantDocument):
+    """MongoDB document recording LLM usage and estimated cost."""
+
     job_id: str = Field(min_length=1)
     agent_name: str = Field(min_length=1)
     task: str = Field(min_length=1)
@@ -27,3 +30,5 @@ class LLMUsageDocument(TenantDocument):
     latency_ms: int = Field(ge=0)
     status: str = "SUCCESS"
     correlation_id: str = Field(min_length=1)
+
+    ts: datetime = Field(default_factory=utc_now)

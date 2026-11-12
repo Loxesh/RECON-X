@@ -2,7 +2,7 @@
 from datetime import datetime
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
 
 from app.models.base import TenantDocument
 from app.models.bson import Money
@@ -10,22 +10,15 @@ from app.models.enums import (
     SourceType,
     TransactionDirection,
     TransactionValidity,
+    TransactionMatchStatus,
 )
 
 
-class TransactionValidationError(BaseModel):
-    """A validation issue found in an imported transaction."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    code: str = Field(min_length=1)
-    message: str = Field(min_length=1)
 
 
 class TransactionDocument(TenantDocument):
-    job_id: str = Field(min_length=1)
-    file_id: str = Field(min_length=1)
-
+    job_id: str
+    file_id: str
     source_type: SourceType
     source_row: int = Field(ge=1)
 
@@ -34,18 +27,18 @@ class TransactionDocument(TenantDocument):
     txn_date: datetime
 
     amount: Money
-    currency: str = Field(pattern=r"^[A-Z]{3}$")
+    currency: str = Field(min_length=3, max_length=3)
     direction: TransactionDirection
 
     description_raw: str | None = None
     description_norm: str | None = None
-    fingerprint: str = Field(min_length=1)
+    fingerprint: str
 
-    validity: TransactionValidity
-    validation_errors: list[TransactionValidationError] = Field(
-        default_factory=list
-    )
-
+    validity: TransactionValidity = TransactionValidity.VALID
+    validation_errors: list[dict[str, Any]] = Field(default_factory=list)
     raw_row: dict[str, Any] = Field(default_factory=dict)
-    match_status: str = "UNMATCHED"
+
+    match_status: TransactionMatchStatus = (
+        TransactionMatchStatus.UNMATCHED
+    )
     flags: list[str] = Field(default_factory=list)
