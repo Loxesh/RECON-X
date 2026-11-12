@@ -14,7 +14,7 @@
 | 07 | Styling foundation | Configured Tailwind v4, global design tokens and initial dashboard shell; desktop and mobile visually checked; production build passed; Git checkpoint created | Completed |
 | 08 | Environment and secret handling | Created environment template and local configuration, implemented Pydantic Settings loader, integrated settings with FastAPI, verified Git secret protection and backend tests; Git checkpoint created | Completed |
 | 09 | MongoDB Atlas setup | Created Atlas development project and M0 cluster, configured restricted application user, stored connection URI locally, verified PyMongo Atlas ping, documented setup, registered dependencies; Git commit bb16461 | Completed |
-
+| 10 | MongoDB fundamentals and Compass inspection | Standalone Compass installation and CRUD learning exercises deferred; database concepts will be covered during implementation | Deferred |
 ## Chapter 07 Verification
 
 - Tailwind CSS and Vite plugin installed.
@@ -67,6 +67,11 @@
 - Git checkpoint pending.
 - Git checkpoint successfully created: `bb16461`.
 - Working tree verified clean.
+## Chapter 10 Notes
+
+- MongoDB Compass installation and standalone practice exercises deferred due to project deadline.
+- Compass is optional and is not a runtime dependency.
+- Required MongoDB operations will be implemented and verified through PyMongo in subsequent chapters.
 
 ## Known Issues
 
