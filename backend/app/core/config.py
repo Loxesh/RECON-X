@@ -12,8 +12,8 @@ class Settings(BaseSettings):
     """
     Central configuration for the RECON X backend.
 
-    Values are loaded from the backend/.env file
-    and can also be overridden by environment variables.
+    Values are loaded from backend/.env and can also
+    be overridden by environment variables.
     """
 
     model_config = SettingsConfigDict(
@@ -36,6 +36,14 @@ class Settings(BaseSettings):
     secret_key: SecretStr = SecretStr(
         "replace-with-a-local-development-placeholder"
     )
+
+    # MongoDB
+    mongodb_uri: SecretStr | None = None
+    mongodb_database: str = "RECON_X_DEV"
+    mongodb_server_selection_timeout_ms: int = 5000
+    mongodb_connect_timeout_ms: int = 5000
+    mongodb_socket_timeout_ms: int = 10000
+    mongodb_max_pool_size: int = 20
 
 
 settings = Settings()
