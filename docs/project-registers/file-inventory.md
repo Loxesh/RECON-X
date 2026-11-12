@@ -24,10 +24,13 @@
 | backend/.env.example | Safe local environment configuration template |
 | backend/pyproject.toml | Python project configuration and dependencies |
 | backend/app/__init__.py | Backend application package |
-| backend/app/main.py | FastAPI application and health endpoint |
+| backend/app/main.py | FastAPI application, lifespan management and health endpoints |
 | backend/app/core/__init__.py | Core configuration package |
 | backend/app/core/config.py | Central Pydantic Settings configuration loader |
-| backend/tests/test_health.py | Health endpoint test |
+| backend/app/core/database.py | MongoDB client creation, ping and shutdown utilities |
+| backend/app/observability/__init__.py | Observability package |
+| backend/app/observability/health.py | MongoDB readiness status helper |
+| backend/tests/test_health.py | API health and database readiness tests |
 
 ## Local Development Files
 
@@ -76,5 +79,6 @@
 - The frontend uses JavaScript and JSX, not TypeScript.
 - MongoDB Atlas is used as the development database.
 - PyMongo is the approved synchronous MongoDB driver.
-- Database lifecycle management, collections, indexes and tenant-scoped repositories will be implemented in subsequent chapters.
+- The FastAPI application manages one MongoDB client through its lifespan.
+- Database collections, indexes and tenant-scoped repositories will be implemented in subsequent chapters.
 - Additional modules will be recorded as implementation progresses.

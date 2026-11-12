@@ -13,8 +13,10 @@
 | 06 | Frontend foundation | Created React + Vite JavaScript application; production build passed | Completed |
 | 07 | Styling foundation | Configured Tailwind v4, global design tokens and initial dashboard shell; desktop and mobile visually checked; production build passed; Git checkpoint created | Completed |
 | 08 | Environment and secret handling | Created environment template and local configuration, implemented Pydantic Settings loader, integrated settings with FastAPI, verified Git secret protection and backend tests; Git checkpoint created | Completed |
-| 09 | MongoDB Atlas setup | Created Atlas development project and M0 cluster, configured restricted application user, stored connection URI locally, verified PyMongo Atlas ping, documented setup, registered dependencies; Git commit bb16461 | Completed |
+| 09 | MongoDB Atlas setup | Created Atlas development project and M0 cluster, configured restricted application user, stored connection URI locally, verified PyMongo Atlas ping, documented setup, registered dependencies; Git commit bb16461 and documentation closure | Completed |
 | 10 | MongoDB fundamentals and Compass inspection | Standalone Compass installation and CRUD learning exercises deferred; database concepts will be covered during implementation | Deferred |
+| 11 | PyMongo connection and health checks | Implemented MongoDB client lifecycle, connection settings, ping, FastAPI lifespan integration and readiness endpoint; 2 tests passed; live Atlas readiness verified; implementation commit bbe09d5 | Completed |
+
 ## Chapter 07 Verification
 
 - Tailwind CSS and Vite plugin installed.
@@ -64,19 +66,47 @@
 - Created `docs/operations/mongodb-atlas.md`.
 - Updated environment variables register.
 - Updated file inventory.
-- Git checkpoint pending.
-- Git checkpoint successfully created: `bb16461`.
-- Working tree verified clean.
+- Git implementation checkpoint: `bb16461`.
+- Git documentation closure checkpoint: `5dad1be`.
+- Working tree verified clean at Chapter 09 closure.
+
 ## Chapter 10 Notes
 
 - MongoDB Compass installation and standalone practice exercises deferred due to project deadline.
 - Compass is optional and is not a runtime dependency.
 - Required MongoDB operations will be implemented and verified through PyMongo in subsequent chapters.
+- Chapter status: Deferred, not marked completed.
+
+## Chapter 11 Verification
+
+- Added MongoDB connection configuration to `backend/app/core/config.py`.
+- Added MongoDB server selection, connection and socket timeouts.
+- Added MongoDB connection pool configuration.
+- Created `backend/app/core/database.py`.
+- Implemented synchronous MongoDB client creation using PyMongo.
+- Configured MongoDB Server API version 1.
+- Implemented MongoDB ping verification.
+- Implemented safe MongoDB client shutdown.
+- Created `backend/app/observability/__init__.py`.
+- Created `backend/app/observability/health.py`.
+- Integrated MongoDB client lifecycle with FastAPI lifespan.
+- Preserved the existing `/api/v1/health` endpoint.
+- Implemented `/api/v1/ready` endpoint.
+- Added tests for API health and unavailable database readiness.
+- Focused test result: 2 passed.
+- Verified `/api/v1/health` through the running FastAPI application.
+- Verified `/api/v1/ready` through the running FastAPI application.
+- Live application readiness result: `ready`.
+- MongoDB result: `connected`.
+- Connection credentials are not returned by the health endpoints.
+-  Git implementation checkpoint: bbe09d5.
+- Documentation registers updated and ready for closure commit.
 
 ## Known Issues
 
 - Backend tests previously produced one Starlette deprecation warning related to `httpx` and `starlette.testclient`. Recorded for investigation during the quality phase.
 - The initial PyMongo installation displayed an informational warning about the `srv` extra. PyMongo and dnspython installed successfully.
+- Readiness currently reflects the MongoDB connectivity check performed during application startup. Recovery and retry behaviour can be enhanced in a later resilience phase.
 
 ## Completion Policy
 
