@@ -1,7 +1,7 @@
 
 from pathlib import Path
 
-from pydantic import SecretStr
+from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -32,9 +32,19 @@ class Settings(BaseSettings):
     environment: str = "development"
     debug: bool = False
 
-    # Security
+    # Existing application secret
     secret_key: SecretStr = SecretStr(
         "replace-with-a-local-development-placeholder"
+    )
+
+    # JWT authentication
+    jwt_secret_key: SecretStr | None = None
+    jwt_issuer: str = "recon-x-local"
+    jwt_audience: str = "recon-x-api"
+    jwt_access_token_expire_minutes: int = Field(
+        default=15,
+        gt=0,
+        le=60,
     )
 
     # MongoDB
