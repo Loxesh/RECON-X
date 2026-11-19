@@ -1,9 +1,13 @@
-﻿# Environment variables and secrets
+﻿
+# Environment variables and secrets
 .env
 .env.*
 !.env.example
 *.pem
 *.key
+
+# Private uploaded financial files
+backend/private_uploads/
 
 # Python
 __pycache__/

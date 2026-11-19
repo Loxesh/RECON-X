@@ -27,11 +27,8 @@ class Settings(BaseSettings):
     environment: str = "development"
     debug: bool = False
     log_level: str = "INFO"
-
-    # CORS: comma-separated frontend origins
     cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
 
-    # Existing application secret
     secret_key: SecretStr = SecretStr(
         "replace-with-a-local-development-placeholder"
     )
@@ -54,10 +51,15 @@ class Settings(BaseSettings):
     mongodb_socket_timeout_ms: int = 10000
     mongodb_max_pool_size: int = 20
 
+    # Upload security
+    max_upload_bytes: int = Field(default=10 * 1024 * 1024, gt=0)
+    private_upload_storage_path: str = str(
+        BACKEND_DIR / "private_uploads"
+    )
+    upload_storage_bucket: str = "recon-x-private-dev"
+
     @property
     def cors_origin_list(self) -> list[str]:
-        """Return configured CORS origins as a clean list."""
-
         return [
             origin.strip()
             for origin in self.cors_origins.split(",")

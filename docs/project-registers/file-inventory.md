@@ -1,13 +1,14 @@
-﻿# RECON X - File Inventory
+﻿
+# RECON X - File Inventory
 
-**Last Updated:** 12 November 2026
+**Last Updated:** 19 November 2026
 
 ## Root Structure
 
 | Path | Purpose |
 |---|---|
 | README.md | Project overview and setup information |
-| .gitignore | Excludes secrets, environments and generated files |
+| .gitignore | Excludes secrets, environments, private uploads and generated files |
 | backend/ | FastAPI backend |
 | frontend/ | React + Vite frontend |
 | docker/ | Container configuration |
@@ -23,12 +24,26 @@
 | backend/.env.example | Safe local environment configuration template |
 | backend/pyproject.toml | Python project configuration and dependencies |
 | backend/app/__init__.py | Backend application package |
-| backend/app/main.py | FastAPI application, lifespan management and health endpoints |
+| backend/app/main.py | FastAPI application, lifespan management, middleware, routers and health endpoints |
+
+## Core Configuration and Infrastructure
+
+| File | Purpose |
+|---|---|
 | backend/app/core/__init__.py | Core configuration package |
 | backend/app/core/config.py | Central Pydantic Settings configuration loader |
 | backend/app/core/database.py | MongoDB client creation, ping and shutdown utilities |
+| backend/app/core/security.py | Password hashing, password verification and JWT token utilities |
+| backend/app/core/permissions.py | Role-based access control and permission definitions |
+| backend/app/core/exceptions.py | Centralized API exception handlers and error responses |
+| backend/app/core/middleware.py | Request ID handling, request context and HTTP request logging |
+
+## Observability
+
+| File | Purpose |
+|---|---|
 | backend/app/observability/__init__.py | Observability package |
-| backend/app/observability/health.py | MongoDB readiness status helper |
+| backend/app/observability/health.py | MongoDB health and readiness status helper |
 
 ## MongoDB Document Models
 
@@ -60,12 +75,59 @@
 |---|---|
 | backend/app/schemas/__init__.py | API schemas package |
 | backend/app/schemas/common.py | Shared API response and pagination schemas |
-| backend/app/schemas/upload.py | Upload request metadata and response schemas |
+| backend/app/schemas/auth.py | Authentication request, token and current-user response schemas |
+| backend/app/schemas/upload.py | Upload metadata and upload response schemas |
 | backend/app/schemas/job.py | Reconciliation job request, response and period schemas |
 | backend/app/schemas/transaction.py | Transaction response, filters and amount summary schemas |
 | backend/app/schemas/exception.py | Exception response, filters, assignment and status update schemas |
 | backend/app/schemas/investigation.py | Investigation request, response and validation schemas |
 | backend/app/schemas/report.py | Report generation request, response and signoff schemas |
+
+## API Routing and Dependencies
+
+| File | Purpose |
+|---|---|
+| backend/app/api/v1/router.py | Central versioned API router |
+| backend/app/api/v1/routers/auth.py | Login and authenticated current-user endpoints |
+| backend/app/api/v1/routers/uploads.py | Authenticated financial file upload endpoint |
+| backend/app/api/deps/auth_deps.py | Current-user authentication and permission dependency functions |
+| backend/app/api/deps/tenant_deps.py | Trusted organization context from authenticated user identity |
+
+## Services
+
+| File | Purpose |
+|---|---|
+| backend/app/services/auth_service.py | User authentication, organization validation and active-user retrieval |
+
+## Repositories
+
+| File | Purpose |
+|---|---|
+| backend/app/repositories/__init__.py | Repository package |
+| backend/app/repositories/base.py | Base tenant-scoped MongoDB repository and CRUD operations |
+| backend/app/repositories/tenant_collections.py | Tenant-scoped repositories for organization-owned collections |
+| backend/app/repositories/organization.py | Organization repository |
+| backend/app/repositories/audit_event.py | Append-only audit event repository interface |
+
+## Ingestion
+
+| File | Purpose |
+|---|---|
+| backend/app/ingestion/__init__.py | Ingestion package |
+| backend/app/ingestion/file_validator.py | File extension, MIME type, size, CSV and XLSX validation |
+
+## Integrations
+
+| File | Purpose |
+|---|---|
+| backend/app/integrations/__init__.py | External integration package |
+| backend/app/integrations/object_storage.py | Provider-independent object storage interface and private local storage implementation |
+
+## Backend Scripts
+
+| File | Purpose |
+|---|---|
+| backend/scripts/create_indexes.py | Creates MongoDB indexes for RECON X collections |
 
 ## Backend Tests
 
@@ -73,6 +135,14 @@
 |---|---|
 | backend/tests/test_health.py | API health and database readiness tests |
 | backend/tests/test_models.py | Collection model, tenant ownership and financial precision tests |
+| backend/tests/test_repository_base.py | Base repository tenant isolation and CRUD tests |
+| backend/tests/test_collection_repositories.py | Collection repository behaviour tests |
+| backend/tests/test_auth.py | Password hashing, JWT and authentication endpoint tests |
+| backend/tests/test_permissions.py | Role-based access control and tenant-context tests |
+| backend/tests/test_api_infrastructure.py | API error handling, request middleware and infrastructure tests |
+| backend/tests/test_file_validator.py | Financial file format, MIME type, size and content validation tests |
+| backend/tests/test_object_storage.py | Private local storage, path traversal and overwrite protection tests |
+| backend/tests/test_uploads.py | Authenticated upload API, metadata, storage and permission tests |
 
 ## Local Development Files
 
@@ -80,6 +150,7 @@
 |---|---|---|
 | backend/.env | Local application and MongoDB Atlas configuration | Ignored |
 | backend/.env.example | Shareable configuration template | Trackable |
+| backend/private_uploads/ | Private local development storage for original uploaded files | Ignored |
 
 ## Frontend Files
 
@@ -119,6 +190,7 @@
 - Python virtual environments, node_modules and frontend dist output are excluded from Git.
 - Local `.env` files must never be committed.
 - `.env.example` must contain safe placeholders only.
+- Private local uploaded files are stored under `backend/private_uploads/` and excluded from Git.
 - The frontend uses JavaScript and JSX, not TypeScript.
 - MongoDB Atlas is used as the development database.
 - PyMongo is the approved synchronous MongoDB driver.
@@ -127,5 +199,11 @@
 - API request and response schemas are maintained separately from MongoDB document models.
 - Financial values use Python Decimal and MongoDB Decimal128.
 - Tenant-owned document models require an organization ID.
-- Database indexes and tenant-scoped repositories are part of the subsequent implementation chapters.
+- Tenant-scoped repositories enforce organization-level data isolation.
+- JWT authentication and role-based access control are implemented.
+- Tenant identity is obtained from the authenticated user context, not directly from client input.
+- API request IDs, centralized exception handling and request logging are implemented.
+- MongoDB indexes are defined and created through the backend index creation script.
+- Secure financial file validation, SHA-256 hashing, private local storage and upload metadata registration are implemented.
+- MinIO/S3-compatible storage integration, ingestion processing, reconciliation workflows, AI agents and frontend API integration remain part of subsequent implementation chapters.
 - Additional modules will be recorded as implementation progresses.
