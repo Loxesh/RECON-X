@@ -9,12 +9,7 @@ BACKEND_DIR = Path(__file__).resolve().parents[2]
 
 
 class Settings(BaseSettings):
-    """
-    Central configuration for the RECON X backend.
-
-    Values are loaded from backend/.env and can also
-    be overridden by environment variables.
-    """
+    """Central configuration for the RECON X backend."""
 
     model_config = SettingsConfigDict(
         env_file=BACKEND_DIR / ".env",
@@ -31,6 +26,10 @@ class Settings(BaseSettings):
     # Runtime
     environment: str = "development"
     debug: bool = False
+    log_level: str = "INFO"
+
+    # CORS: comma-separated frontend origins
+    cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
 
     # Existing application secret
     secret_key: SecretStr = SecretStr(
@@ -54,6 +53,16 @@ class Settings(BaseSettings):
     mongodb_connect_timeout_ms: int = 5000
     mongodb_socket_timeout_ms: int = 10000
     mongodb_max_pool_size: int = 20
+
+    @property
+    def cors_origin_list(self) -> list[str]:
+        """Return configured CORS origins as a clean list."""
+
+        return [
+            origin.strip()
+            for origin in self.cors_origins.split(",")
+            if origin.strip()
+        ]
 
 
 settings = Settings()

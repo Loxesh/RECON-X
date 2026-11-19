@@ -9,7 +9,6 @@ def test_health_endpoint():
         response = client.get("/api/v1/health")
 
     assert response.status_code == 200
-
     assert response.json() == {
         "status": "healthy",
         "service": "recon-x-api",
@@ -25,9 +24,10 @@ def test_readiness_endpoint_when_database_is_unavailable():
 
     assert response.status_code == 503
 
-    assert response.json() == {
-        "detail": {
-            "status": "not_ready",
-            "database": "unavailable",
-        }
-    }
+    body = response.json()
+
+    assert body["success"] is False
+    assert body["error"]["code"] == "HTTP_503"
+    assert body["error"]["message"]
+    assert body["request_id"]
+    assert "detail" not in body

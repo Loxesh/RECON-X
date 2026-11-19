@@ -1,27 +1,35 @@
 
+import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
 from pymongo.errors import PyMongoError
 
-from app.api.v1.routers.auth import router as auth_router
+from app.api.v1.router import api_router
 from app.core.config import settings
 from app.core.database import (
     close_mongo_client,
     create_mongo_client,
     ping_mongodb,
 )
+from app.core.exceptions import register_exception_handlers
+from app.core.middleware import RequestContextMiddleware
 from app.observability.health import get_database_health
+
+
+logging.basicConfig(
+    level=getattr(logging, settings.log_level.upper(), logging.INFO),
+    format=(
+        "%(asctime)s %(levelname)s %(name)s "
+        "%(message)s"
+    ),
+)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """
-    Manage the MongoDB client lifecycle.
-
-    Create one client at startup, verify connectivity,
-    and close it during application shutdown.
-    """
+    """Manage the MongoDB client lifecycle."""
 
     app.state.mongodb_client = None
     app.state.mongodb_database = None
@@ -34,6 +42,9 @@ async def lifespan(app: FastAPI):
         app.state.mongodb_healthy = ping_mongodb(client)
 
     except (PyMongoError, RuntimeError):
+        logging.getLogger("recon_x.api").exception(
+            "MongoDB startup connection failed"
+        )
         app.state.mongodb_healthy = False
 
     try:
@@ -59,9 +70,30 @@ app = FastAPI(
 )
 
 
-# Register API routers
+# Request correlation and logging
+app.add_middleware(RequestContextMiddleware)
+
+# Cross-origin frontend access
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.cors_origin_list,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=[
+        "Authorization",
+        "Content-Type",
+        "X-Request-ID",
+        "Idempotency-Key",
+    ],
+    expose_headers=["X-Request-ID"],
+)
+
+# Central error handling
+register_exception_handlers(app)
+
+# Versioned API routes
 app.include_router(
-    auth_router,
+    api_router,
     prefix=settings.api_v1_prefix,
 )
 
