@@ -1,13 +1,11 @@
 
-"""Authentication dependencies for protected API routes."""
-
-import jwt
+"""Authentication and permission dependencies for protected routes."""
 
 from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from app.core.config import settings
-from app.core.security import _get_jwt_secret
+from app.core.permissions import has_permission
+from app.core.security import decode_access_token
 from app.services.auth_service import get_active_user
 
 
@@ -20,7 +18,7 @@ def get_current_user(
         bearer_scheme
     ),
 ) -> dict:
-    """Verify the bearer token and return the active database user."""
+    """Verify the JWT and retrieve the active database user."""
 
     unauthorized = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -40,26 +38,7 @@ def get_current_user(
         )
 
     try:
-        payload = jwt.decode(
-            credentials.credentials,
-            key=_get_jwt_secret(),
-            algorithms=["HS256"],
-            issuer=settings.jwt_issuer,
-            audience=settings.jwt_audience,
-            options={
-                "require": [
-                    "sub",
-                    "org_id",
-                    "roles",
-                    "iss",
-                    "aud",
-                    "iat",
-                    "nbf",
-                    "exp",
-                    "jti",
-                ],
-            },
-        )
+        payload = decode_access_token(credentials.credentials)
 
         user_id = payload.get("sub")
         org_id = payload.get("org_id")
@@ -67,7 +46,7 @@ def get_current_user(
         if not isinstance(user_id, str) or not isinstance(org_id, str):
             raise unauthorized
 
-    except (jwt.PyJWTError, RuntimeError):
+    except Exception:
         raise unauthorized from None
 
     user = get_active_user(
@@ -80,3 +59,22 @@ def get_current_user(
         raise unauthorized
 
     return user
+
+
+def require_permission(permission: str):
+    """Create a dependency that enforces a specific permission."""
+
+    def permission_dependency(
+        current_user: dict = Depends(get_current_user),
+    ) -> dict:
+        roles = current_user.get("roles", [])
+
+        if not has_permission(roles, permission):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="You do not have permission to perform this action.",
+            )
+
+        return current_user
+
+    return permission_dependency
