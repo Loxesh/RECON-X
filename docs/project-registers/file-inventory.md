@@ -11,11 +11,17 @@
 | .gitignore | Excludes secrets, environments, private uploads and generated files |
 | backend/ | FastAPI backend |
 | frontend/ | React + Vite frontend |
-| docker/ | Container configuration |
+| docker/ | Local container configuration for S3-compatible storage |
 | scripts/ | Project utility scripts |
 | sample_data/ | Sample input data |
 | docs/ | Project documentation and registers |
 | .github/workflows/ | CI workflow directory |
+
+## Docker Configuration
+
+| File | Purpose |
+|---|---|
+| docker/docker-compose.yml | Local SILO S3-compatible object storage service configuration |
 
 ## Backend Files
 
@@ -115,19 +121,27 @@
 |---|---|
 | backend/app/ingestion/__init__.py | Ingestion package |
 | backend/app/ingestion/file_validator.py | File extension, MIME type, size, CSV and XLSX validation |
+| backend/app/ingestion/csv_xlsx_parser.py | CSV and multi-sheet XLSX parsing with source-row and sheet information preservation |
 
 ## Integrations
 
 | File | Purpose |
 |---|---|
 | backend/app/integrations/__init__.py | External integration package |
-| backend/app/integrations/object_storage.py | Provider-independent object storage interface and private local storage implementation |
+| backend/app/integrations/object_storage.py | Provider-independent storage interface with private local and boto3-based S3-compatible implementations |
+
+## Sample Development Data
+
+| File | Purpose |
+|---|---|
+| backend/sample_bank_statement.csv | Synthetic bank statement used for parser and ingestion testing |
 
 ## Backend Scripts
 
 | File | Purpose |
 |---|---|
 | backend/scripts/create_indexes.py | Creates MongoDB indexes for RECON X collections |
+| backend/scripts/create_dev_admin.py | Interactive setup of a development organisation and administrator account |
 
 ## Backend Tests
 
@@ -141,8 +155,9 @@
 | backend/tests/test_permissions.py | Role-based access control and tenant-context tests |
 | backend/tests/test_api_infrastructure.py | API error handling, request middleware and infrastructure tests |
 | backend/tests/test_file_validator.py | Financial file format, MIME type, size and content validation tests |
-| backend/tests/test_object_storage.py | Private local storage, path traversal and overwrite protection tests |
+| backend/tests/test_object_storage.py | Local and mocked S3-compatible storage operation tests |
 | backend/tests/test_uploads.py | Authenticated upload API, metadata, storage and permission tests |
+| backend/tests/test_csv_xlsx_parser.py | CSV and XLSX parser behaviour, encoding, multi-sheet and malformed input tests |
 
 ## Local Development Files
 
@@ -204,6 +219,11 @@
 - Tenant identity is obtained from the authenticated user context, not directly from client input.
 - API request IDs, centralized exception handling and request logging are implemented.
 - MongoDB indexes are defined and created through the backend index creation script.
-- Secure financial file validation, SHA-256 hashing, private local storage and upload metadata registration are implemented.
-- MinIO/S3-compatible storage integration, ingestion processing, reconciliation workflows, AI agents and frontend API integration remain part of subsequent implementation chapters.
+- Secure financial file validation, SHA-256 hashing, private object storage and upload metadata registration are implemented.
+- The local S3-compatible storage service uses SILO; it is not the official MinIO server image.
+- The development sample bank statement contains synthetic data only.
+- The development administrator setup script prompts for credentials and hashes passwords using Argon2.
+- S3-compatible storage integration is implemented using the local SILO service and boto3 adapter.
+- CSV/XLSX parsing is implemented as an ingestion component; financial normalization and reconciliation remain future workbook work.
+- Reconciliation workflows, AI agents and frontend API integration remain in their designated implementation chapters.
 - Additional modules will be recorded as implementation progresses.

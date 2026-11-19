@@ -86,7 +86,7 @@ The endpoint returns HTTP 503 when MongoDB is unavailable. The API uses the cent
 - **Method:** POST
 - **Path:** `/api/v1/uploads`
 - **Expected HTTP Status:** 201 when the upload is successfully stored and registered.
-- **Purpose:** Validates an uploaded financial source file, stores the original in private local storage and registers its metadata in MongoDB.
+- **Purpose:** Validates an uploaded financial source file, stores the original in private object storage and registers its metadata in MongoDB.
 - **Authentication:** Requires a valid JWT access token.
 - **Permission:** `uploads:create`.
 - **Content Type:** `multipart/form-data`.
@@ -109,7 +109,7 @@ Both period dates must be supplied together. The end date cannot be earlier than
 - Rejects empty, malformed, unsupported and oversized files.
 - Calculates the SHA-256 checksum of the original file.
 - Generates a tenant-scoped storage key using the organization ID, year, month and file ID.
-- Stores the original file in a private local development storage directory.
+- Stores the original file through the configured private object storage adapter.
 - Registers upload metadata using the tenant-scoped UploadedFileRepository.
 - Derives organization identity from the authenticated user, not from client input.
 - Sets the initial scan status to `PENDING`.
@@ -142,10 +142,16 @@ The successful response uses `UploadedFileResponse` and includes:
 
 ### Storage Notes
 
-- Chapter 17 uses a provider-independent storage interface with a private local development implementation.
-- The local private upload directory is excluded from Git.
+- Chapter 17 introduced the provider-independent storage interface and private upload implementation.
+- Chapter 18 extended the adapter with S3-compatible storage operations.
+- Local development uses SILO, a MinIO-derived S3-compatible server.
+- The backend communicates with S3-compatible storage through the storage adapter and boto3.
+- The development bucket is `recon-x-private-dev`.
+- The bucket is configured for private access.
+- Supported adapter operations include put, get, delete and head.
+- Presigned download URL generation is supported by the storage adapter.
+- The local private upload directory and storage credentials are excluded from Git.
 - Original files are not exposed through public URLs.
-- MinIO and S3-compatible provider integration is addressed in Chapter 18.
 
 ## 6. MongoDB Health Behaviour
 
@@ -207,7 +213,8 @@ These API groups remain planned for subsequent implementation chapters:
 - Authentication and current-user endpoints are implemented.
 - JWT authentication and role-based access control infrastructure are available.
 - Tenant context is derived from the authenticated user.
-- The secure financial file upload endpoint is implemented and tested.
-- The upload endpoint uses private local storage; MinIO/S3 integration is not yet implemented.
+- The secure financial file upload endpoint is implemented and automated tests are passing.
+- S3-compatible storage operations have been tested against the local SILO server.
+- CSV and XLSX parsing is implemented as an internal ingestion component; it does not introduce a new HTTP endpoint.
 - Schema definitions do not mean their corresponding HTTP endpoints are already available.
 - Reconciliation, investigation, reporting and frontend API integration will be implemented in their designated workbook chapters.

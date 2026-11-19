@@ -1,4 +1,4 @@
-ï»¿
+
 # RECON X - Chapter Completion Record
 
 **Last Updated:** 19 November 2026
@@ -23,15 +23,17 @@
 | 14 | Authentication | Implemented Argon2 password hashing, JWT issuance and verification, active-user retrieval and protected authentication endpoints | Completed |
 | 15 | Role-based access control | Implemented org_admin, finance_analyst and auditor permissions with trusted tenant context | Completed |
 | 16 | Core API foundation | Implemented standard API errors, request ID middleware, request logging, CORS and OpenAPI integration | Completed |
-| 17 | Secure upload API and object storage interface | Implemented file validation, private local storage, SHA-256 hashing, authenticated upload endpoint and upload tests; final documentation and Git checkpoint pending | In Progress |
-| 18â€“21 | Upload and ingestion | MinIO/S3 integration, ingestion processing and subsequent upload workflow implementation | Not Started |
-| 22â€“27 | Reconciliation engine | Pending implementation and verification | Not Started |
-| 28â€“31 | Governance and AI | Pending implementation and verification | Not Started |
-| 32â€“37 | Agents and orchestration | Pending implementation and verification | Not Started |
-| 38â€“40 | Workers and reporting | Pending implementation and verification | Not Started |
-| 41â€“44 | Frontend implementation | Pending implementation and verification | Not Started |
-| 45â€“46 | Integration | Pending implementation and verification | Not Started |
-| 47â€“51 | Quality and delivery | Pending implementation and verification | Not Started |
+| 17 | Secure upload API and object storage interface | Implemented secure file validation, authenticated upload endpoint, SHA-256 hashing and provider-independent storage interface | Completed |
+| 18 | S3-compatible object storage | Implemented SILO-based local S3-compatible storage, boto3 adapter and live storage operation verification | Completed |
+| 19 | CSV/XLSX parsing | Implemented CSV and multi-sheet XLSX parsing with source-row preservation and parser tests | Completed |
+| 20–21 | Upload and ingestion | Remaining ingestion workflow implementation | Not Started |
+| 22–27 | Reconciliation engine | Pending implementation and verification | Not Started |
+| 28–31 | Governance and AI | Pending implementation and verification | Not Started |
+| 32–37 | Agents and orchestration | Pending implementation and verification | Not Started |
+| 38–40 | Workers and reporting | Pending implementation and verification | Not Started |
+| 41–44 | Frontend implementation | Pending implementation and verification | Not Started |
+| 45–46 | Integration | Pending implementation and verification | Not Started |
+| 47–51 | Quality and delivery | Pending implementation and verification | Not Started |
 | 52 | Optional deployment | Optional deployment preparation; only if required | Not Started |
 
 ## Chapter 07 Verification
@@ -202,7 +204,6 @@
 - Implemented safe storage-key path validation.
 - Prevented overwriting existing stored objects.
 - Implemented object deletion for cleanup.
-- Object storage tests: 7 passed.
 
 ### Upload API
 
@@ -212,19 +213,17 @@
 - Implemented multipart upload metadata and financial period validation.
 - Implemented SHA-256 checksum generation.
 - Implemented tenant-scoped storage key generation.
-- Stored original files in private local storage.
 - Registered upload metadata through `UploadedFileRepository`.
 - Implemented cleanup when metadata registration fails.
 - Kept internal storage details out of the API response.
-- Upload API tests: 6 passed.
 
 ### Verification Results
 
 - Python compilation checks passed.
 - Upload route registration verified through OpenAPI.
-- Focused file validation and object storage tests: 17 passed.
+- Focused file validation and object storage tests passed.
 - Focused upload API tests: 6 passed.
-- Full backend test suite: **154 passed, 1 warning**.
+- Full backend test suite at Chapter 17: 154 passed, 1 warning.
 - Verified `backend/private_uploads/` is ignored by Git.
 - Existing Starlette/httpx deprecation warning remains recorded for the quality phase.
 
@@ -235,11 +234,69 @@
 - API contract register: Updated.
 - File inventory: Updated.
 - Chapter completion record: Updated.
-- Git implementation commit: Pending.
-- Final Git verification and push: Pending.
+- Git implementation commit: `40aeaa3`.
+- Git push: Completed.
 
-**Chapter 17 implementation and testing are complete. Documentation and Git closure are pending final verification.**
+**Chapter 17 implementation, testing and Git checkpoint are complete.**
 
+## Chapter 18 Verification
+
+### S3-Compatible Object Storage
+
+- Configured a local SILO server as the MinIO-derived S3-compatible development storage service.
+- Added the local storage container configuration in `docker/docker-compose.yml`.
+- Created the private development bucket `recon-x-private-dev`.
+- Verified the bucket is configured for private access.
+- Implemented the provider-independent storage interface.
+- Implemented the boto3-based S3-compatible storage adapter.
+- Implemented object upload, download, deletion and metadata inspection.
+- Implemented presigned download URL generation.
+- Verified object upload and download round-trip using the local storage service.
+- Verified the adapter's live put, get, head, presigned URL and delete operations.
+- Expanded storage adapter tests to cover local and mocked S3-compatible operations.
+- Object storage tests: 18 passed.
+- Full backend test suite after Chapters 18 and 19: 178 passed, 1 warning.
+
+### Chapter 18 Closure
+
+- Implementation verification: Passed.
+- Live S3-compatible storage operations: Passed.
+- Full backend test suite: 178 passed after Chapter 19.
+- Environment variable register: Updated.
+- API contract register: Updated.
+- File inventory: Updated.
+- Chapter completion record: Updated.
+- Git implementation commit: 2a40573.
+- Documentation and implementation checkpoints prepared for Git push.
+
+**Chapter 18 implementation and storage verification are complete. Documentation and Git closure remain pending.**
+
+## Chapter 19 Verification
+
+### CSV/XLSX Parsing
+
+- Implemented CSV parsing with UTF-8, UTF-8 BOM and CP1252 decoding support.
+- Implemented XLSX parsing with multi-sheet support.
+- Preserved source row numbers, raw row values and sheet names.
+- Implemented parsing issue reporting for malformed rows and headers.
+- Rejected unsupported file extensions and macro-enabled spreadsheet extensions.
+- Added handling for corrupt XLSX files.
+- Kept parsing separate from financial normalization, transaction matching and business rules.
+- Created parser tests covering CSV encodings, malformed rows, headers, XLSX sheets and unsupported files.
+- CSV/XLSX parser tests: 13 passed.
+- Full backend test suite: **178 passed, 1 warning**.
+
+### Chapter 19 Closure
+
+- Parser implementation: Passed.
+- Parser tests: 13 passed.
+- Full backend test suite: 178 passed, 1 warning.
+- File inventory: Updated.
+- Chapter completion record: Updated.
+- Git implementation commit: 2a40573.
+- Documentation and implementation checkpoints prepared for Git push.
+
+**Chapter 19 implementation and automated testing are complete. Documentation and Git closure remain pending.**
 ## Existing Git Checkpoints
 
 | Chapter / Work Area | Commit |
@@ -259,11 +316,14 @@
 | Chapter 14 authentication | `06ee6c6` |
 | Chapter 15 RBAC | `ff257fe` |
 | Chapter 16 API infrastructure | `effc53c` |
+| Chapters 18–19 implementation | `2a40573` |
 
 ## Notes
 
 - Chapter 10 remains Deferred.
 - The existing Starlette/httpx TestClient deprecation warning is tracked for investigation during the quality phase.
 - A passing test count represents automated checks, not a claim of complete code coverage.
-- Chapter 18 is responsible for MinIO and S3-compatible object storage integration.
+- Chapter 18 uses SILO, a MinIO-derived S3-compatible local storage service; it is not the official MinIO server image.
+- Chapter 19 implements CSV/XLSX parsing without performing financial normalization or reconciliation.
+- The existing Starlette/httpx TestClient deprecation warning remains tracked for the quality phase.
 - Chapters must be marked Completed only after implementation, verification, documentation and Git checkpoint requirements are satisfied.
