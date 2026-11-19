@@ -41,6 +41,7 @@ def upload_test_environment(tmp_path, monkeypatch):
         "private_upload_storage_path",
         str(storage_path),
     )
+    monkeypatch.setattr(settings, "object_storage_provider", "local")
     monkeypatch.setattr(settings, "max_upload_bytes", 1024)
 
     monkeypatch.setattr(

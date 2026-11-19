@@ -58,6 +58,19 @@ class Settings(BaseSettings):
     )
     upload_storage_bucket: str = "recon-x-private-dev"
 
+    # Object storage
+    object_storage_provider: str = "local"
+    s3_endpoint_url: str | None = None
+    s3_bucket: str = "recon-x-private-dev"
+    s3_region: str = "us-east-1"
+    s3_access_key_id: str | None = None
+    s3_secret_access_key: SecretStr | None = None
+    s3_presigned_url_expiry_seconds: int = Field(
+        default=300,
+        gt=0,
+        le=3600,
+    )
+
     @property
     def cors_origin_list(self) -> list[str]:
         return [

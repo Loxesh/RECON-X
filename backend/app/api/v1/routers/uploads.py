@@ -24,7 +24,7 @@ from app.ingestion.file_validator import (
     FileValidationError,
     validate_uploaded_file,
 )
-from app.integrations.object_storage import LocalPrivateObjectStorage
+from app.integrations.object_storage import create_object_storage
 from app.models.enums import SourceType
 from app.repositories.tenant_collections import UploadedFileRepository
 from app.schemas.upload import (
@@ -128,11 +128,8 @@ async def upload_file(
         f"{file_id}/original"
     )
 
-    storage = LocalPrivateObjectStorage(
-        settings.private_upload_storage_path
-    )
-
     try:
+        storage = create_object_storage()
         storage.put_object(
             key=object_key,
             content=validated.content,
@@ -153,7 +150,11 @@ async def upload_file(
         "content_type": validated.content_type,
         "size_bytes": validated.size_bytes,
         "sha256": digest,
-        "storage_bucket": settings.upload_storage_bucket,
+        "storage_bucket": (
+            settings.s3_bucket
+            if settings.object_storage_provider.lower() == "s3"
+            else settings.upload_storage_bucket
+        ),
         "storage_key": object_key,
         "scan_status": "PENDING",
         "uploaded_by": str(current_user.get("_id")),
@@ -176,7 +177,9 @@ async def upload_file(
         try:
             storage.delete_object(object_key)
         except Exception:
-            logger.exception("Failed to clean up stored file after database error")
+            logger.exception(
+                "Failed to clean up stored file after database error"
+            )
 
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

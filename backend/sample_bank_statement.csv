@@ -1,0 +1,4 @@
+﻿transaction_id,transaction_date,description,amount,reference
+TXN001,2026-11-15,Customer Payment,15000.00,REF001
+TXN002,2026-11-16,Vendor Payment,-5000.00,REF002
+TXN003,2026-11-17,Service Charge,-250.00,REF003

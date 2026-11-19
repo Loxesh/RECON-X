@@ -1,0 +1,24 @@
+
+services:
+  minio:
+    image: docker.io/pgsty/silo:RELEASE.2026-11-12T00-00-00Z
+    container_name: reconx-minio
+    command: server /data --console-address ":9001"
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY_ID:?Set S3_ACCESS_KEY_ID in backend/.env}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_ACCESS_KEY:?Set S3_SECRET_ACCESS_KEY in backend/.env}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "silo", "healthcheck", "ready"]
+      interval: 30s
+      timeout: 10s
+      start_period: 2m
+      retries: 3
+
+volumes:
+  minio_data:
