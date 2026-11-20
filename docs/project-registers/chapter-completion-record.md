@@ -1,7 +1,7 @@
 ﻿
 # RECON X - Chapter Completion Record
 
-**Last Updated:** 19 November 2026
+**Last Updated:** 20 November 2026
 
 ## Chapter Progress Summary
 
@@ -26,7 +26,8 @@
 | 17 | Secure upload API and object storage interface | Implemented secure file validation, authenticated upload endpoint, SHA-256 hashing and provider-independent storage interface | Completed |
 | 18 | S3-compatible object storage | Implemented SILO-based local S3-compatible storage, boto3 adapter and live storage operation verification | Completed |
 | 19 | CSV/XLSX parsing | Implemented CSV and multi-sheet XLSX parsing with source-row preservation and parser tests | Completed |
-| 20�21 | Upload and ingestion | Remaining ingestion workflow implementation | Not Started |
+| 20 | Header mapping and schema validation | Implemented BANK, LEDGER and GATEWAY header mapping and row-level validation | Completed |
+| 21 | Canonical normalization and provenance | Implementation and verification complete; Git checkpoint pending | In Progress |
 | 22�27 | Reconciliation engine | Pending implementation and verification | Not Started |
 | 28�31 | Governance and AI | Pending implementation and verification | Not Started |
 | 32�37 | Agents and orchestration | Pending implementation and verification | Not Started |
@@ -266,10 +267,11 @@
 - API contract register: Updated.
 - File inventory: Updated.
 - Chapter completion record: Updated.
-- Git implementation commit: 2a40573.
-- Documentation and implementation checkpoints prepared for Git push.
+- Git implementation commit: `2a40573`.
+- Git documentation closure commit: `5cec76f`.
+- Both checkpoints are present in the project Git history.
 
-**Chapter 18 implementation and storage verification are complete. Documentation and Git closure remain pending.**
+**Chapter 18 implementation, storage verification, documentation and Git checkpoints are complete.**
 
 ## Chapter 19 Verification
 
@@ -293,10 +295,11 @@
 - Full backend test suite: 178 passed, 1 warning.
 - File inventory: Updated.
 - Chapter completion record: Updated.
-- Git implementation commit: 2a40573.
-- Documentation and implementation checkpoints prepared for Git push.
+- Git implementation commit: `2a40573`.
+- Git documentation closure commit: `5cec76f`.
+- Both checkpoints are present in the project Git history.
 
-**Chapter 19 implementation and automated testing are complete. Documentation and Git closure remain pending.**
+**Chapter 19 implementation, automated testing, documentation and Git checkpoints are complete.**
 ## Existing Git Checkpoints
 
 | Chapter / Work Area | Commit |
@@ -316,7 +319,9 @@
 | Chapter 14 authentication | `06ee6c6` |
 | Chapter 15 RBAC | `ff257fe` |
 | Chapter 16 API infrastructure | `effc53c` |
-| Chapters 18�19 implementation | `2a40573` |
+| Chapters 18–19 implementation | `2a40573` |
+| Chapters 18–19 documentation closure | `5cec76f` |
+| Chapter 20 implementation and verification | `24eca0b` |
 
 ## Chapter 20 Verification
 
@@ -341,25 +346,70 @@
 - Full backend test suite: 189 passed.
 - File inventory: Updated.
 - Chapter completion record: Updated.
-- Git implementation and documentation checkpoint: Pending.
+- Git implementation commit: `24eca0b`.
 
-**Chapter 20 implementation and automated verification are complete.**
-Documentation and Git checkpoint remain pending.
+**Chapter 20 implementation, automated verification and Git implementation checkpoint are complete.**
 
 ## Chapter 20 Notes
 
 - Header mapping supports BANK, LEDGER and GATEWAY source types.
 - Unknown and ambiguous headers are reported rather than guessed.
 - Invalid rows retain their original source data.
-- Financial date, amount and currency normalization is reserved for Chapter 21.
+- Financial date, amount and currency normalization is implemented in Chapter 21.
 
 
+
+## Chapter 21 Verification
+
+### Canonical Normalization
+
+- Implemented canonical date parsing and UTC normalization.
+- Naive dates require an explicitly supplied source timezone.
+- Implemented Decimal-only financial amount normalization.
+- Rejected binary floating-point financial values.
+- Normalized signed amounts into positive magnitudes with CREDIT or DEBIT direction.
+- Checked explicitly supplied directions against signed amount values.
+- Implemented uppercase three-letter currency format validation without FX conversion.
+- Normalized transaction references and descriptions.
+- Preserved original source row values.
+- Git implementation and documentation checkpoint: Pending.
+- Git implementation commit: `ac34f0c` (pushed to origin/main).
+- Documentation checkpoint: Ready for commit.
+**Chapter 21 implementation and automated verification are complete.**
+| Chapter 21 implementation | `ac34f0c` |
+### Provenance
+
+- Implemented source filename, source type, source row number and worksheet provenance.
+- Preserved original raw row values.
+- Implemented deterministic SHA-256 hashes for raw source rows.
+- Implemented deterministic transaction fingerprints using source identity and canonical data.
+- Provenance hashing does not claim database-level immutability or an audit-chain guarantee.
+
+### Verification Results
+
+- Created `backend/app/ingestion/normalizer.py`.
+- Created `backend/app/ingestion/provenance.py`.
+- Created `backend/tests/test_normalizer.py`.
+- Created `backend/tests/test_provenance.py`.
+- Full backend test suite: **240 passed, 1 warning**.
+- Existing Starlette/httpx TestClient deprecation warning remains tracked for the quality phase.
+- No existing parser, BSON helper or transaction model files were modified.
+
+### Chapter 21 Closure
+
+- Implementation verification: Passed.
+- Full backend automated tests: 240 passed, 1 warning.
+- File inventory: Updated.
+- Chapter completion record: Updated.
+- Git implementation and documentation checkpoint: Pending.
+
+**Chapter 21 implementation, automated verification and documentation updates are complete. Git checkpoint remains pending.**
 ## Notes
 
 - Chapter 10 remains Deferred.
 - The existing Starlette/httpx TestClient deprecation warning is tracked for investigation during the quality phase.
 - A passing test count represents automated checks, not a claim of complete code coverage.
 - Chapter 18 uses SILO, a MinIO-derived S3-compatible local storage service; it is not the official MinIO server image.
-- Chapter 19 implements CSV/XLSX parsing without performing financial normalization or reconciliation.
+- Chapter 19 implements CSV/XLSX parsing; financial normalization and provenance are implemented in Chapter 21. Reconciliation remains pending.
 - The existing Starlette/httpx TestClient deprecation warning remains tracked for the quality phase.
 - Chapters must be marked Completed only after implementation, verification, documentation and Git checkpoint requirements are satisfied.

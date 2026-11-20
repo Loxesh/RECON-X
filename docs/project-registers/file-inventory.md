@@ -1,7 +1,7 @@
 ﻿
 # RECON X - File Inventory
 
-**Last Updated:** 19 November 2026
+**Last Updated:** 20 November 2026
 
 ## Root Structure
 
@@ -123,6 +123,8 @@ backend/app/ingestion/file_validator.py	File extension, MIME type, size, CSV and
 backend/app/ingestion/csv_xlsx_parser.py	CSV and multi-sheet XLSX parsing with source-row and sheet information preservation
 backend/app/ingestion/header_mapper.py	Maps bank, ledger and gateway column aliases into canonical transaction fields
 backend/app/ingestion/validators.py	Validates mapped transaction rows and preserves row-level validation issues
+backend/app/ingestion/normalizer.py      Normalizes dates, Decimal amounts, currencies, directions, references and descriptions
+backend/app/ingestion/provenance.py      Preserves source file and row provenance and generates deterministic SHA-256 fingerprints
 
 ## Integrations
 
@@ -161,6 +163,8 @@ backend/app/ingestion/validators.py	Validates mapped transaction rows and preser
 | backend/tests/test_csv_xlsx_parser.py | CSV and XLSX parser behaviour, encoding, multi-sheet and malformed input tests |
 File	Purpose
 backend/tests/test_header_mapping.py	Header mapping, source-specific aliases, ambiguous headers and row validation tests
+| backend/tests/test_normalizer.py | Date, timezone, Decimal amount, currency, direction and reference normalization tests |
+| backend/tests/test_provenance.py | Source provenance, raw-row hashing and transaction fingerprint tests |
 
 ## Local Development Files
 
@@ -227,6 +231,8 @@ backend/tests/test_header_mapping.py	Header mapping, source-specific aliases, am
 - The development sample bank statement contains synthetic data only.
 - The development administrator setup script prompts for credentials and hashes passwords using Argon2.
 - S3-compatible storage integration is implemented using the local SILO service and boto3 adapter.
-- CSV/XLSX parsing is implemented as an ingestion component; financial normalization and reconciliation remain future workbook work.
+- CSV/XLSX parsing, header mapping, row validation, financial normalization and source provenance are implemented as ingestion components.
+- Financial amounts are normalized using Decimal; original source rows and provenance are preserved.
+- Naive transaction dates require an explicitly supplied source timezone; no local timezone is silently assumed.
 - Reconciliation workflows, AI agents and frontend API integration remain in their designated implementation chapters.
 - Additional modules will be recorded as implementation progresses.
