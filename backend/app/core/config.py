@@ -28,6 +28,7 @@ class Settings(BaseSettings):
     debug: bool = False
     log_level: str = "INFO"
     cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
+    redis_url: str = "redis://localhost:6379/0"
 
     secret_key: SecretStr = SecretStr(
         "replace-with-a-local-development-placeholder"

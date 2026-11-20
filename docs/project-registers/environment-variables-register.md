@@ -9,7 +9,7 @@ The backend uses Pydantic Settings to load configuration from `backend/.env`. Th
 
 MongoDB Atlas connectivity is integrated into the FastAPI application through synchronous PyMongo.
 
-Authentication, JWT configuration, request middleware and private S3-compatible object storage configuration are implemented.
+Authentication, JWT configuration, request middleware, private S3-compatible object storage and Redis-backed Celery worker configuration are implemented.
 
 ## Implemented Variables
 
@@ -43,12 +43,12 @@ Authentication, JWT configuration, request middleware and private S3-compatible 
 | S3_ACCESS_KEY_ID | Backend | S3-compatible storage access key | Yes | Configured locally |
 | S3_SECRET_ACCESS_KEY | Backend | S3-compatible storage secret | Yes | Configured locally |
 | S3_PRESIGNED_URL_EXPIRY_SECONDS | Backend | Presigned download URL validity period | No | Implemented |
+| REDIS_URL | Backend | Redis broker URL used by Celery background workers | No | Implemented; local development uses Redis on localhost:6379/0 |
 
 ## Planned Variables
 
 | Variable | Scope | Purpose | Status |
 |---|---|---|---|
-| REDIS_URL | Backend | Redis connection | Planned |
 | LLM_PROVIDER | Backend | LLM provider selection | Planned |
 | GEMINI_API_KEY | Backend | Gemini integration | Planned |
 | OPENAI_COMPAT_API_KEY | Backend | OpenAI-compatible provider integration | Planned |
@@ -78,5 +78,5 @@ Authentication, JWT configuration, request middleware and private S3-compatible 
 - S3-compatible object storage is configured using the local SILO server.
 - The storage adapter supports local private storage and S3-compatible storage.
 - CSV and XLSX parsing implementation is available in the ingestion module.
-- Redis and LLM provider configuration remain planned for their designated chapters.
+- Redis is configured for the Chapter 22 Celery background ingestion worker. LLM provider configuration remains planned for its designated chapter.
 - Planned variables must be introduced in their relevant implementation chapters.

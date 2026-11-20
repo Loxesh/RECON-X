@@ -11,7 +11,8 @@
 | GET | /api/v1/ready | Check application and MongoDB readiness | Implemented |
 | POST | /api/v1/auth/login | Authenticate a user and issue an access token | Implemented |
 | GET | /api/v1/auth/me | Retrieve the authenticated user's information | Implemented |
-| POST | /api/v1/uploads | Validate, privately store and register a financial source file | Implemented |
+| POST | /api/v1/uploads | Validate, privately store and register a financial source file and enqueue ingestion | Implemented |
+| GET | /api/v1/uploads/{file_id}/status | Retrieve tenant-scoped ingestion job status and row counts | Implemented |
 
 ## 1. API Health Endpoint
 
@@ -138,7 +139,28 @@ The successful response uses `UploadedFileResponse` and includes:
 | 403 | Authenticated user lacks upload permission or valid organization context |
 | 422 | Invalid multipart metadata or incomplete period dates |
 | 503 | MongoDB database unavailable |
+| 409 | Idempotency key reused with different request data or duplicate file fingerprint |
 | 500 | Private storage or metadata registration failure |
+
+### Idempotency and Background Ingestion
+
+- Upload requests require the `Idempotency-Key` HTTP header.
+- Repeating the same request with the same key returns the existing upload and ingestion job without creating another job or enqueueing duplicate work.
+- Reusing the same key with different request data returns HTTP 409 Conflict.
+- Uploading the same file fingerprint for the same organization and source type with a different key returns HTTP 409 Conflict.
+- The file fingerprint uses the original file SHA-256 and source type within the authenticated organization.
+- A newly registered upload creates an ingestion job and dispatches the background Celery task.
+- The worker processes parsing, header mapping, row validation and canonical normalization, then records job status and row counts.
+- Queue dispatch failure is reported to the client; the registered job remains observable for recovery.
+
+### Ingestion Status Endpoint
+
+- **Method:** GET
+- **Path:** `/api/v1/uploads/{file_id}/status`
+- **Authentication:** Requires a valid JWT access token.
+- **Tenant isolation:** File and job lookup are scoped to the authenticated organization.
+- **Response information:** Job status, total/valid/invalid row counts, error summary and attempt count.
+- The endpoint does not expose another organization's upload or ingestion job.
 
 ### Storage Notes
 
@@ -172,7 +194,7 @@ The following Pydantic API schemas are available under `backend/app/schemas/`.
 |---|---|---|
 | common.py | ApiResponse, PaginationParams, PaginationMetadata, PaginatedResponse | Standard API responses and pagination |
 | auth.py | LoginRequest, TokenResponse, CurrentUserResponse | Authentication and current-user response contracts |
-| upload.py | UploadPeriodSchema, UploadMetadataSchema, UploadedFileResponse, UploadInitiationResponse | Upload metadata and upload response contracts |
+| upload.py | UploadPeriodSchema, UploadMetadataSchema, UploadedFileResponse, UploadInitiationResponse, IngestionJobStatusResponse | Upload metadata, ingestion initiation and job status response contracts |
 | job.py | JobPeriodSchema, ReconciliationFileSelection, ReconciliationJobCreateRequest, ReconciliationJobResponse, ReconciliationJobListItem | Reconciliation job request and response contracts |
 | transaction.py | TransactionResponse, TransactionListFilters, TransactionAmountSummary | Transaction retrieval, filtering and summary contracts |
 | exception.py | ExceptionResponse, ExceptionListFilters, ExceptionAssignmentRequest, ExceptionStatusUpdateRequest | Exception review and assignment contracts |
@@ -197,7 +219,6 @@ The following Pydantic API schemas are available under `backend/app/schemas/`.
 
 These API groups remain planned for subsequent implementation chapters:
 
-- Upload status retrieval
 - Reconciliation jobs
 - Transactions and matches
 - Exceptions
@@ -213,8 +234,8 @@ These API groups remain planned for subsequent implementation chapters:
 - Authentication and current-user endpoints are implemented.
 - JWT authentication and role-based access control infrastructure are available.
 - Tenant context is derived from the authenticated user.
-- The secure financial file upload endpoint is implemented and automated tests are passing.
+- The secure financial file upload endpoint, idempotency handling, background ingestion dispatch and tenant-scoped upload status endpoint are implemented and automated tests are passing.
 - S3-compatible storage operations have been tested against the local SILO server.
-- CSV and XLSX parsing is implemented as an internal ingestion component; it does not introduce a new HTTP endpoint.
+- CSV and XLSX parsing, header mapping, row validation and canonical normalization are executed by the background ingestion task; parsing components do not introduce separate HTTP endpoints.
 - Schema definitions do not mean their corresponding HTTP endpoints are already available.
 - Reconciliation, investigation, reporting and frontend API integration will be implemented in their designated workbook chapters.

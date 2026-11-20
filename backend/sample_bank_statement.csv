@@ -1,4 +1,4 @@
-﻿transaction_id,transaction_date,description,amount,reference
-TXN001,2026-11-15,Customer Payment,15000.00,REF001
-TXN002,2026-11-16,Vendor Payment,-5000.00,REF002
-TXN003,2026-11-17,Service Charge,-250.00,REF003
+transaction_id,transaction_date,description,amount,currency,direction,reference
+TXN001,2026-11-15T10:00:00+05:30,Customer Payment,15000.00,INR,CREDIT,REF001
+TXN002,2026-11-16T11:30:00+05:30,Vendor Payment,-5000.00,INR,DEBIT,REF002
+TXN003,2026-11-17T09:15:00+05:30,Service Charge,-250.00,INR,DEBIT,REF003

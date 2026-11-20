@@ -21,7 +21,7 @@
 
 | File | Purpose |
 |---|---|
-| docker/docker-compose.yml | Local SILO S3-compatible object storage service configuration |
+| docker/docker-compose.yml | Local SILO S3-compatible object storage and Redis service configuration |
 
 ## Backend Files
 
@@ -95,7 +95,7 @@
 |---|---|
 | backend/app/api/v1/router.py | Central versioned API router |
 | backend/app/api/v1/routers/auth.py | Login and authenticated current-user endpoints |
-| backend/app/api/v1/routers/uploads.py | Authenticated financial file upload endpoint |
+| backend/app/api/v1/routers/uploads.py | Authenticated upload, idempotency handling and ingestion status endpoints |
 | backend/app/api/deps/auth_deps.py | Current-user authentication and permission dependency functions |
 | backend/app/api/deps/tenant_deps.py | Trusted organization context from authenticated user identity |
 
@@ -104,6 +104,7 @@
 | File | Purpose |
 |---|---|
 | backend/app/services/auth_service.py | User authentication, organization validation and active-user retrieval |
+| backend/app/services/upload_service.py | Tenant-scoped upload registration, idempotency, duplicate detection and ingestion job lifecycle |
 
 ## Repositories
 
@@ -132,6 +133,10 @@ backend/app/ingestion/provenance.py      Preserves source file and row provenanc
 |---|---|
 | backend/app/integrations/__init__.py | External integration package |
 | backend/app/integrations/object_storage.py | Provider-independent storage interface with private local and boto3-based S3-compatible implementations |
+| backend/app/workers/__init__.py | Background workers package |
+| backend/app/workers/celery_app.py | Celery application configuration, Redis broker and ingestion queue routing |
+| backend/app/workers/tasks/__init__.py | Background task package |
+| backend/app/workers/tasks/ingest_task.py | Background financial file ingestion task and job lifecycle processing |
 
 ## Sample Development Data
 
@@ -143,7 +148,7 @@ backend/app/ingestion/provenance.py      Preserves source file and row provenanc
 
 | File | Purpose |
 |---|---|
-| backend/scripts/create_indexes.py | Creates MongoDB indexes for RECON X collections |
+| backend/scripts/create_indexes.py | Creates MongoDB indexes, including unique upload fingerprint, idempotency and ingestion job indexes |
 | backend/scripts/create_dev_admin.py | Interactive setup of a development organisation and administrator account |
 
 ## Backend Tests
@@ -159,7 +164,7 @@ backend/app/ingestion/provenance.py      Preserves source file and row provenanc
 | backend/tests/test_api_infrastructure.py | API error handling, request middleware and infrastructure tests |
 | backend/tests/test_file_validator.py | Financial file format, MIME type, size and content validation tests |
 | backend/tests/test_object_storage.py | Local and mocked S3-compatible storage operation tests |
-| backend/tests/test_uploads.py | Authenticated upload API, metadata, storage and permission tests |
+| backend/tests/test_uploads.py | Upload API, idempotency, duplicate fingerprint detection, ingestion status, storage and permission tests |
 | backend/tests/test_csv_xlsx_parser.py | CSV and XLSX parser behaviour, encoding, multi-sheet and malformed input tests |
 File	Purpose
 backend/tests/test_header_mapping.py	Header mapping, source-specific aliases, ambiguous headers and row validation tests
@@ -206,6 +211,13 @@ backend/tests/test_header_mapping.py	Header mapping, source-specific aliases, am
 | docs/project-registers/environment-variables-register.md | Environment variable tracking |
 | docs/project-registers/file-inventory.md | Project file inventory |
 | docs/project-registers/chapter-completion-record.md | Workbook chapter progress |
+
+## Chapter 22 Additions
+
+- Upload registration and ingestion job lifecycle are implemented in `backend/app/services/upload_service.py`.
+- Celery background processing is configured in `backend/app/workers/` and uses Redis.
+- The upload API exposes a tenant-scoped ingestion status endpoint.
+- Upload idempotency and duplicate file fingerprints are enforced through service logic and MongoDB unique indexes.
 
 ## Notes
 

@@ -4,8 +4,6 @@
 import sys
 from pathlib import Path
 
-# Ensure the backend directory is importable when this file is
-# executed using: python scripts/create_indexes.py
 BACKEND_DIR = Path(__file__).resolve().parents[1]
 if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
@@ -14,20 +12,13 @@ from app.core.config import settings
 from app.core.database import close_mongo_client, create_mongo_client
 
 
-# Each entry contains:
-# (index keys, index options)
 INDEX_DEFINITIONS = {
     "organizations": [
-        (
-            [("slug", 1)],
-            {"name": "uq_organizations_slug", "unique": True},
-        ),
+        ([("slug", 1)], {"name": "uq_organizations_slug", "unique": True}),
     ],
     "users": [
-        (
-            [("org_id", 1), ("email", 1)],
-            {"name": "uq_users_org_email", "unique": True},
-        ),
+        ([("org_id", 1), ("email", 1)],
+         {"name": "uq_users_org_email", "unique": True}),
         (
             [("org_id", 1), ("external_subject", 1)],
             {
@@ -42,7 +33,20 @@ INDEX_DEFINITIONS = {
     "uploaded_files": [
         (
             [("org_id", 1), ("sha256", 1), ("source_type", 1)],
-            {"name": "ix_uploaded_files_org_hash_source"},
+            {
+                "name": "uq_uploaded_files_org_hash_source",
+                "unique": True,
+            },
+        ),
+        (
+            [("org_id", 1), ("idempotency_key", 1)],
+            {
+                "name": "uq_uploaded_files_org_idempotency",
+                "unique": True,
+                "partialFilterExpression": {
+                    "idempotency_key": {"$type": "string"}
+                },
+            },
         ),
         (
             [("org_id", 1), ("created_at", -1)],
@@ -56,7 +60,10 @@ INDEX_DEFINITIONS = {
         ),
         (
             [("org_id", 1), ("file_id", 1)],
-            {"name": "ix_ingestion_jobs_org_file"},
+            {
+                "name": "uq_ingestion_jobs_org_file",
+                "unique": True,
+            },
         ),
     ],
     "transactions": [
@@ -92,32 +99,20 @@ INDEX_DEFINITIONS = {
         ),
     ],
     "match_results": [
-        (
-            [("org_id", 1), ("job_id", 1), ("status", 1)],
-            {"name": "ix_match_results_org_job_status"},
-        ),
-        (
-            [("org_id", 1), ("side_a_ids", 1)],
-            {"name": "ix_match_results_org_side_a"},
-        ),
-        (
-            [("org_id", 1), ("side_b_ids", 1)],
-            {"name": "ix_match_results_org_side_b"},
-        ),
+        ([("org_id", 1), ("job_id", 1), ("status", 1)],
+         {"name": "ix_match_results_org_job_status"}),
+        ([("org_id", 1), ("side_a_ids", 1)],
+         {"name": "ix_match_results_org_side_a"}),
+        ([("org_id", 1), ("side_b_ids", 1)],
+         {"name": "ix_match_results_org_side_b"}),
     ],
     "exceptions": [
-        (
-            [("org_id", 1), ("job_id", 1), ("status", 1)],
-            {"name": "ix_exceptions_org_job_status"},
-        ),
-        (
-            [("org_id", 1), ("type", 1), ("created_at", -1)],
-            {"name": "ix_exceptions_org_type_created"},
-        ),
-        (
-            [("org_id", 1), ("summary", "text")],
-            {"name": "tx_exceptions_org_summary"},
-        ),
+        ([("org_id", 1), ("job_id", 1), ("status", 1)],
+         {"name": "ix_exceptions_org_job_status"}),
+        ([("org_id", 1), ("type", 1), ("created_at", -1)],
+         {"name": "ix_exceptions_org_type_created"}),
+        ([("org_id", 1), ("summary", "text")],
+         {"name": "tx_exceptions_org_summary"}),
     ],
     "investigations": [
         (
@@ -160,21 +155,41 @@ INDEX_DEFINITIONS = {
         ),
     ],
     "llm_usage": [
-        (
-            [("org_id", 1), ("job_id", 1)],
-            {"name": "ix_llm_usage_org_job"},
-        ),
-        (
-            [("org_id", 1), ("ts", -1)],
-            {"name": "ix_llm_usage_org_ts"},
-        ),
+        ([("org_id", 1), ("job_id", 1)],
+         {"name": "ix_llm_usage_org_job"}),
+        ([("org_id", 1), ("ts", -1)],
+         {"name": "ix_llm_usage_org_ts"}),
     ],
 }
 
 
 def create_indexes(database) -> int:
     """Create all declared indexes and return the number processed."""
-    created_count = 0
+
+    # Remove the previous non-unique indexes before creating their
+    # unique replacements. Existing data was checked for duplicates.
+    replacements = {
+        "uploaded_files": [
+            "ix_uploaded_files_org_hash_source",
+        ],
+        "ingestion_jobs": [
+            "ix_ingestion_jobs_org_file",
+        ],
+    }
+
+    for collection_name, index_names in replacements.items():
+        collection = database[collection_name]
+        existing_names = {
+            index["name"]
+            for index in collection.list_indexes()
+        }
+
+        for index_name in index_names:
+            if index_name in existing_names:
+                collection.drop_index(index_name)
+                print(f"  Dropped old index: {collection_name}.{index_name}")
+
+    processed_count = 0
 
     for collection_name, definitions in INDEX_DEFINITIONS.items():
         collection = database[collection_name]
@@ -182,13 +197,14 @@ def create_indexes(database) -> int:
         for keys, options in definitions:
             index_name = collection.create_index(keys, **options)
             print(f"  {collection_name}: {index_name}")
-            created_count += 1
+            processed_count += 1
 
-    return created_count
+    return processed_count
 
 
 def main() -> None:
-    """Connect to MongoDB, create indexes, and close the client."""
+    """Connect to MongoDB, create indexes and close the client."""
+
     client = create_mongo_client()
 
     try:

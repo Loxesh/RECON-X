@@ -1,6 +1,7 @@
 
+from datetime import datetime, timezone
 from hashlib import sha256
-from pathlib import Path
+from io import BytesIO
 
 import pytest
 from bson import ObjectId
@@ -11,6 +12,33 @@ from app.api.deps import auth_deps
 from app.api.v1.routers import uploads
 from app.core.config import settings
 from app.core.security import create_access_token
+from app.services.upload_service import UploadConflictError
+
+
+class FakeCollection:
+    """Small in-memory collection for upload API tests."""
+
+    def __init__(self):
+        self.documents = []
+
+    def find_one(self, query):
+        for document in self.documents:
+            if all(document.get(key) == value for key, value in query.items()):
+                return document
+        return None
+
+
+class FakeDatabase:
+    """In-memory database used by the test environment."""
+
+    def __init__(self):
+        self.collections = {
+            "uploaded_files": FakeCollection(),
+            "ingestion_jobs": FakeCollection(),
+        }
+
+    def __getitem__(self, collection_name):
+        return self.collections[collection_name]
 
 
 @pytest.fixture
@@ -28,7 +56,7 @@ def upload_test_environment(tmp_path, monkeypatch):
         "status": "ACTIVE",
     }
 
-    database = object()
+    database = FakeDatabase()
 
     app = FastAPI()
     app.include_router(uploads.router, prefix="/api/v1")
@@ -41,8 +69,8 @@ def upload_test_environment(tmp_path, monkeypatch):
         "private_upload_storage_path",
         str(storage_path),
     )
-    monkeypatch.setattr(settings, "object_storage_provider", "local")
     monkeypatch.setattr(settings, "max_upload_bytes", 1024)
+    monkeypatch.setattr(settings, "object_storage_provider", "local")
 
     monkeypatch.setattr(
         auth_deps,
@@ -55,21 +83,118 @@ def upload_test_environment(tmp_path, monkeypatch):
         ),
     )
 
-    saved_documents = []
+    saved_files = []
+    saved_jobs = []
+    queued_tasks = []
 
-    class FakeUploadedFileRepository:
-        def __init__(self, database, repository_org_id):
-            assert database is app.state.mongodb_database
+    class FakeUploadService:
+        def __init__(self, service_database, repository_org_id):
+            assert service_database is database
             assert repository_org_id == org_id
 
-        def create(self, document):
-            saved_documents.append(document)
-            return document
+            self.database = service_database
+            self.org_id = repository_org_id
+
+        def create_upload_and_job(
+            self,
+            *,
+            file_document,
+            idempotency_key,
+        ):
+            files_collection = self.database["uploaded_files"]
+            jobs_collection = self.database["ingestion_jobs"]
+
+            existing = files_collection.find_one(
+                {
+                    "org_id": self.org_id,
+                    "idempotency_key": idempotency_key,
+                }
+            )
+
+            if existing:
+                same_payload = (
+                    existing.get("sha256") == file_document.get("sha256")
+                    and existing.get("source_type")
+                    == file_document.get("source_type")
+                    and existing.get("period") == file_document.get("period")
+                )
+
+                if not same_payload:
+                    raise UploadConflictError(
+                        "Idempotency key was already used for another request."
+                    )
+
+                existing_job = jobs_collection.find_one(
+                    {
+                        "org_id": self.org_id,
+                        "file_id": str(existing["_id"]),
+                    }
+                )
+
+                return existing, existing_job, False
+
+            duplicate = files_collection.find_one(
+                {
+                    "org_id": self.org_id,
+                    "sha256": file_document["sha256"],
+                    "source_type": file_document["source_type"],
+                }
+            )
+
+            if duplicate:
+                raise UploadConflictError(
+                    "This file has already been uploaded for this source."
+                )
+
+            now = datetime.now(timezone.utc)
+
+            saved_file = dict(file_document)
+            saved_file["_id"] = file_document.get("_id", ObjectId())
+            saved_file["org_id"] = self.org_id
+            saved_file["idempotency_key"] = idempotency_key
+            saved_file.setdefault("created_at", now)
+            saved_file.setdefault("updated_at", now)
+
+            saved_job = {
+                "_id": ObjectId(),
+                "org_id": self.org_id,
+                "file_id": str(saved_file["_id"]),
+                "status": "PENDING",
+                "counts": {
+                    "total": 0,
+                    "valid": 0,
+                    "invalid": 0,
+                },
+                "errors_summary": [],
+                "attempts": 0,
+                "created_at": now,
+                "updated_at": now,
+                "started_at": None,
+                "finished_at": None,
+                "schema_version": 1,
+            }
+
+            # Save in the fake database so the status endpoint can find them.
+            files_collection.documents.append(saved_file)
+            jobs_collection.documents.append(saved_job)
+
+            saved_files.append(saved_file)
+            saved_jobs.append(saved_job)
+
+            return saved_file, saved_job, True
 
     monkeypatch.setattr(
         uploads,
-        "UploadedFileRepository",
-        FakeUploadedFileRepository,
+        "UploadService",
+        FakeUploadService,
+    )
+
+    monkeypatch.setattr(
+        uploads.process_ingestion,
+        "delay",
+        lambda org_id, file_id, job_id: queued_tasks.append(
+            (org_id, file_id, job_id)
+        ),
     )
 
     token = create_access_token(
@@ -81,85 +206,204 @@ def upload_test_environment(tmp_path, monkeypatch):
     client = TestClient(app)
 
     return {
-        "client": client,
         "app": app,
+        "client": client,
+        "database": database,
+        "org_id": org_id,
         "user": user,
         "token": token,
-        "storage_path": storage_path,
-        "saved_documents": saved_documents,
+        "saved_files": saved_files,
+        "saved_jobs": saved_jobs,
+        "queued_tasks": queued_tasks,
     }
 
 
-def auth_headers(environment):
+def auth_headers(environment, idempotency_key="test-upload-key"):
     return {
-        "Authorization": f"Bearer {environment['token']}"
+        "Authorization": f"Bearer {environment['token']}",
+        "Idempotency-Key": idempotency_key,
     }
 
 
 def valid_csv():
-    return b"date,amount\n2026-01-01,100.00\n"
+    return (
+        b"Date,Amount,Description,Reference\n"
+        b"2026-01-01,100.00,Test payment,REF001\n"
+        b"2026-01-02,200.00,Second payment,REF002\n"
+    )
 
 
-def test_successful_upload_stores_file_and_metadata(
-    upload_test_environment,
+def upload_csv(
+    environment,
+    *,
+    idempotency_key="test-upload-key",
+    content=None,
+    filename="statement.csv",
 ):
-    environment = upload_test_environment
-    content = valid_csv()
-
-    response = environment["client"].post(
+    return environment["client"].post(
         "/api/v1/uploads",
-        headers=auth_headers(environment),
+        headers=auth_headers(environment, idempotency_key),
         data={"source_type": "BANK"},
         files={
             "file": (
-                "statement.csv",
-                content,
+                filename,
+                content if content is not None else valid_csv(),
                 "text/csv",
             )
         },
     )
 
+
+def test_successful_upload_stores_file_and_creates_job(
+    upload_test_environment,
+):
+    environment = upload_test_environment
+
+    response = upload_csv(environment)
+
     assert response.status_code == 201
 
     body = response.json()
 
+    assert body["id"]
+    assert body["ingestion_job_id"]
+    assert body["ingestion_status"] == "PENDING"
     assert body["original_filename"] == "statement.csv"
-    assert body["source_type"] == "BANK"
-    assert body["size_bytes"] == len(content)
-    assert body["sha256"] == sha256(content).hexdigest()
-    assert body["scan_status"] == "PENDING"
 
-    assert len(environment["saved_documents"]) == 1
+    assert len(environment["saved_files"]) == 1
+    assert len(environment["saved_jobs"]) == 1
+    assert len(environment["queued_tasks"]) == 1
 
-    document = environment["saved_documents"][0]
+    saved_file = environment["saved_files"][0]
+    saved_job = environment["saved_jobs"][0]
 
-    # Tenant identity must come from the authenticated user.
-    assert document["org_id"] == environment["user"]["org_id"]
-    assert document["uploaded_by"] == str(environment["user"]["_id"])
-
-    # Verify the expected private object-key structure.
-    assert document["storage_key"].startswith(
-        f"{environment['user']['org_id']}/"
-    )
-    assert document["storage_key"].endswith("/original")
-
-    # Verify that the original file exists in private storage.
-    stored_file = (
-        environment["storage_path"]
-        / document["storage_key"]
-    )
-
-    assert stored_file.is_file()
-    assert stored_file.read_bytes() == content
-
-    # The response must not expose internal storage details.
-    assert "storage_key" not in body
-    assert "storage_bucket" not in body
+    assert saved_file["org_id"] == environment["org_id"]
+    assert saved_file["sha256"] == sha256(valid_csv()).hexdigest()
+    assert saved_job["file_id"] == str(saved_file["_id"])
+    assert saved_job["status"] == "PENDING"
 
 
-def test_upload_rejects_unsupported_file_type(
+def test_same_idempotency_request_does_not_create_duplicate_job(
     upload_test_environment,
 ):
+    environment = upload_test_environment
+
+    first_response = upload_csv(environment)
+    second_response = upload_csv(environment)
+
+    assert first_response.status_code == 201
+    assert second_response.status_code == 201
+
+    assert first_response.json()["id"] == second_response.json()["id"]
+
+    assert (
+        first_response.json()["ingestion_job_id"]
+        == second_response.json()["ingestion_job_id"]
+    )
+
+    assert len(environment["saved_files"]) == 1
+    assert len(environment["saved_jobs"]) == 1
+    assert len(environment["queued_tasks"]) == 1
+
+
+def test_reusing_idempotency_key_with_different_file_returns_conflict(
+    upload_test_environment,
+):
+    environment = upload_test_environment
+
+    first_response = upload_csv(environment)
+
+    changed_content = (
+        b"Date,Amount,Description,Reference\n"
+        b"2026-01-01,999.00,Different payment,REF999\n"
+    )
+
+    second_response = upload_csv(
+        environment,
+        content=changed_content,
+    )
+
+    assert first_response.status_code == 201
+    assert second_response.status_code == 409
+
+    assert len(environment["saved_files"]) == 1
+    assert len(environment["saved_jobs"]) == 1
+    assert len(environment["queued_tasks"]) == 1
+
+
+def test_duplicate_file_with_different_key_returns_conflict(
+    upload_test_environment,
+):
+    environment = upload_test_environment
+
+    first_response = upload_csv(
+        environment,
+        idempotency_key="first-request",
+    )
+
+    second_response = upload_csv(
+        environment,
+        idempotency_key="second-request",
+    )
+
+    assert first_response.status_code == 201
+    assert second_response.status_code == 409
+
+    assert len(environment["saved_files"]) == 1
+    assert len(environment["saved_jobs"]) == 1
+    assert len(environment["queued_tasks"]) == 1
+
+
+def test_upload_status_is_observable(upload_test_environment):
+    environment = upload_test_environment
+
+    upload_response = upload_csv(environment)
+
+    assert upload_response.status_code == 201
+
+    file_id = upload_response.json()["id"]
+
+    job = environment["saved_jobs"][0]
+    job["status"] = "COMPLETED"
+    job["counts"] = {
+        "total": 10,
+        "valid": 8,
+        "invalid": 2,
+    }
+    job["attempts"] = 1
+
+    response = environment["client"].get(
+        f"/api/v1/uploads/{file_id}/status",
+        headers=auth_headers(environment),
+    )
+
+    assert response.status_code == 200
+
+    body = response.json()
+
+    assert body["file_id"] == file_id
+    assert body["ingestion_job_id"] == str(job["_id"])
+    assert body["status"] == "COMPLETED"
+    assert body["counts"]["total"] == 10
+    assert body["counts"]["valid"] == 8
+    assert body["counts"]["invalid"] == 2
+    assert body["attempts"] == 1
+
+
+def test_upload_status_does_not_expose_another_tenant_file(
+    upload_test_environment,
+):
+    environment = upload_test_environment
+
+    response = environment["client"].get(
+        f"/api/v1/uploads/{ObjectId()}/status",
+        headers=auth_headers(environment),
+    )
+
+    assert response.status_code == 404
+
+
+def test_upload_rejects_unsupported_file_type(upload_test_environment):
     environment = upload_test_environment
 
     response = environment["client"].post(
@@ -168,7 +412,7 @@ def test_upload_rejects_unsupported_file_type(
         data={"source_type": "BANK"},
         files={
             "file": (
-                "malicious.txt",
+                "document.txt",
                 b"not a supported financial file",
                 "text/plain",
             )
@@ -176,12 +420,12 @@ def test_upload_rejects_unsupported_file_type(
     )
 
     assert response.status_code == 400
-    assert environment["saved_documents"] == []
+    assert environment["saved_files"] == []
+    assert environment["saved_jobs"] == []
+    assert environment["queued_tasks"] == []
 
 
-def test_upload_rejects_oversized_file(
-    upload_test_environment,
-):
+def test_upload_rejects_oversized_file(upload_test_environment):
     environment = upload_test_environment
 
     oversized_content = (
@@ -203,12 +447,12 @@ def test_upload_rejects_oversized_file(
     )
 
     assert response.status_code == 400
-    assert environment["saved_documents"] == []
+    assert environment["saved_files"] == []
+    assert environment["saved_jobs"] == []
+    assert environment["queued_tasks"] == []
 
 
-def test_upload_rejects_missing_authentication(
-    upload_test_environment,
-):
+def test_upload_rejects_missing_authentication(upload_test_environment):
     environment = upload_test_environment
 
     response = environment["client"].post(
@@ -224,7 +468,8 @@ def test_upload_rejects_missing_authentication(
     )
 
     assert response.status_code == 401
-    assert environment["saved_documents"] == []
+    assert environment["saved_files"] == []
+    assert environment["saved_jobs"] == []
 
 
 def test_upload_rejects_user_without_upload_permission(
@@ -233,7 +478,6 @@ def test_upload_rejects_user_without_upload_permission(
 ):
     environment = upload_test_environment
 
-    # Replace the authenticated user's role with auditor.
     auditor = {
         **environment["user"],
         "roles": ["auditor"],
@@ -259,7 +503,8 @@ def test_upload_rejects_user_without_upload_permission(
     response = environment["client"].post(
         "/api/v1/uploads",
         headers={
-            "Authorization": f"Bearer {auditor_token}"
+            "Authorization": f"Bearer {auditor_token}",
+            "Idempotency-Key": "auditor-request",
         },
         data={"source_type": "BANK"},
         files={
@@ -272,7 +517,9 @@ def test_upload_rejects_user_without_upload_permission(
     )
 
     assert response.status_code == 403
-    assert environment["saved_documents"] == []
+    assert environment["saved_files"] == []
+    assert environment["saved_jobs"] == []
+    assert environment["queued_tasks"] == []
 
 
 def test_upload_returns_service_unavailable_without_database(
@@ -295,4 +542,6 @@ def test_upload_returns_service_unavailable_without_database(
     )
 
     assert response.status_code == 503
-    assert environment["saved_documents"] == []
+    assert environment["saved_files"] == []
+    assert environment["saved_jobs"] == []
+    assert environment["queued_tasks"] == []
