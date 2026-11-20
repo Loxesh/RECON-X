@@ -1,4 +1,4 @@
-﻿
+
 # RECON X - File Inventory
 
 **Last Updated:** 20 November 2026
@@ -248,3 +248,17 @@ backend/tests/test_header_mapping.py	Header mapping, source-specific aliases, am
 - Naive transaction dates require an explicitly supplied source timezone; no local timezone is silently assumed.
 - Reconciliation workflows, AI agents and frontend API integration remain in their designated implementation chapters.
 - Additional modules will be recorded as implementation progresses.
+
+## Reconciliation
+
+| File | Purpose |
+|---|---|
+| backend/app/reconciliation/__init__.py | Reconciliation package |
+| backend/app/reconciliation/schemas.py | Immutable matching input, output, outcome, rule and evidence schemas |
+| backend/app/reconciliation/rules.py | Validated matching ruleset configuration, deterministic fingerprint and immutable ruleset snapshots |
+
+## Reconciliation Tests
+
+| File | Purpose |
+|---|---|
+| backend/tests/test_reconciliation_rules.py | Matching schema validation, ruleset defaults, tolerance bounds, priority validation, immutability and snapshot integrity tests |

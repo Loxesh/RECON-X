@@ -239,3 +239,10 @@ These API groups remain planned for subsequent implementation chapters:
 - CSV and XLSX parsing, header mapping, row validation and canonical normalization are executed by the background ingestion task; parsing components do not introduce separate HTTP endpoints.
 - Schema definitions do not mean their corresponding HTTP endpoints are already available.
 - Reconciliation, investigation, reporting and frontend API integration will be implemented in their designated workbook chapters.
+
+## Chapter 23 � Matching Contracts
+
+- Defined internal matching input and output schemas.
+- Defined matching outcomes, rule identifiers and evidence structures.
+- Matching results carry the ruleset version and SHA-256 ruleset fingerprint.
+- No reconciliation API endpoint is introduced in this chapter. API endpoints will be added in their designated workbook chapters.

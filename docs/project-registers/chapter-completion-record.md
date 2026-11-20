@@ -1,4 +1,4 @@
-﻿
+
 # RECON X - Chapter Completion Record
 
 **Last Updated:** 20 November 2026
@@ -437,3 +437,40 @@
 - Chapter 19 implements CSV/XLSX parsing; financial normalization and provenance are implemented in Chapter 21. Reconciliation remains pending.
 - The existing Starlette/httpx TestClient deprecation warning remains tracked for the quality phase.
 - Chapters must be marked Completed only after implementation, verification, documentation and Git checkpoint requirements are satisfied.
+
+---
+
+## Chapter 23 Verification — Matching Data Contracts and Ruleset Configuration
+
+- Created `backend/app/reconciliation/` package.
+- Implemented immutable matching transaction and pair input schemas.
+- Implemented matching outcome, rule identifier, evidence and result schemas.
+- Implemented configurable matching ruleset with the approved starting defaults:
+  - Bank-ledger date window: ±2 days.
+  - Gateway-ledger date window: ±3 days.
+  - Auto-confirm amount tolerance: 0.00.
+  - Suggested amount tolerance: 1.00.
+  - Fuzzy matching threshold: 0.85.
+  - Aggregate group size maximum: 25.
+- Implemented validation for rule priority, date windows, monetary tolerances, fuzzy threshold and gateway fee tolerances.
+- Implemented deterministic ruleset JSON serialization and SHA-256 fingerprinting.
+- Implemented immutable ruleset snapshots with fingerprint integrity validation.
+- Created `backend/tests/test_reconciliation_rules.py`.
+- Focused reconciliation tests: **18 passed**.
+- Full backend test suite: **263 passed, 1 warning**.
+- Existing Starlette/httpx deprecation warning remains recorded for the quality phase.
+- No reconciliation API endpoint or database persistence was introduced in this chapter.
+
+### Chapter 23 Closure
+
+- Implementation verification: Passed.
+- Focused tests: 18 passed.
+- Full backend tests: 263 passed.
+- API contract register: Updated.
+- File inventory: Updated.
+- Environment variables register: No changes required.
+- Chapter completion record: Updated.
+- Git implementation commit: 18db472.
+- Git documentation commit: Pending.
+
+**Chapter 23 implementation, testing, and documentation are complete.**
