@@ -27,15 +27,16 @@
 | 18 | S3-compatible object storage | Implemented SILO-based local S3-compatible storage, boto3 adapter and live storage operation verification | Completed |
 | 19 | CSV/XLSX parsing | Implemented CSV and multi-sheet XLSX parsing with source-row preservation and parser tests | Completed |
 | 20 | Header mapping and schema validation | Implemented BANK, LEDGER and GATEWAY header mapping and row-level validation | Completed |
-| 21 | Canonical normalization and provenance | Implementation and verification complete; Git checkpoint pending | In Progress |
-| 22�27 | Reconciliation engine | Pending implementation and verification | Not Started |
-| 28�31 | Governance and AI | Pending implementation and verification | Not Started |
-| 32�37 | Agents and orchestration | Pending implementation and verification | Not Started |
-| 38�40 | Workers and reporting | Pending implementation and verification | Not Started |
-| 41�44 | Frontend implementation | Pending implementation and verification | Not Started |
-| 45�46 | Integration | Pending implementation and verification | Not Started |
-| 47�51 | Quality and delivery | Pending implementation and verification | Not Started |
-| 52 | Optional deployment | Optional deployment preparation; only if required | Not Started |
+| 21 | Canonical normalization and provenance | Implemented Decimal/date/currency/direction normalization and deterministic source provenance; 240 tests passed; implementation and documentation commits pushed | Completed |
+| 22 | Duplicate ingestion and job lifecycle | Implemented idempotent upload registration, duplicate fingerprint protection, Celery/Redis background ingestion, observable job status and row counts; 245 tests passed | Completed |
+| 23-29 | Reconciliation engine | Pending implementation and verification | Not Started |
+| 30-33 | Governance and AI | Pending implementation and verification | Not Started |
+| 34-39 | Agents and orchestration | Pending implementation and verification | Not Started |
+| 40-42 | Workers and reporting | Pending implementation and verification | Not Started |
+| 43-46 | Frontend | Pending implementation and verification | Not Started |
+| 47-48 | Integration | Pending implementation and verification | Not Started |
+| 49-51 | Quality and delivery | Pending implementation and verification | Not Started |
+| 52 | Optional deployment | Pending implementation and verification | Not Started |
 
 ## Chapter 07 Verification
 
@@ -372,9 +373,8 @@
 - Implemented uppercase three-letter currency format validation without FX conversion.
 - Normalized transaction references and descriptions.
 - Preserved original source row values.
-- Git implementation and documentation checkpoint: Pending.
 - Git implementation commit: `ac34f0c` (pushed to origin/main).
-- Documentation checkpoint: Ready for commit.
+- Git documentation commit: `0b80ec5` (pushed to origin/main).
 **Chapter 21 implementation and automated verification are complete.**
 | Chapter 21 implementation | `ac34f0c` |
 ### Provenance
@@ -401,9 +401,33 @@
 - Full backend automated tests: 240 passed, 1 warning.
 - File inventory: Updated.
 - Chapter completion record: Updated.
-- Git implementation and documentation checkpoint: Pending.
 
-**Chapter 21 implementation, automated verification and documentation updates are complete. Git checkpoint remains pending.**
+**Chapter 21 implementation, automated verification and documentation updates are complete.**
+## Chapter 22 Verification
+
+### Upload and Job Lifecycle
+
+- Implemented tenant-scoped upload registration and ingestion job creation.
+- Added required `Idempotency-Key` handling for upload requests.
+- Same key and same request reuse the existing upload and job.
+- Same key with different request data returns HTTP 409 Conflict.
+- Duplicate file fingerprints for the same organization and source type are rejected, even when a different idempotency key is supplied.
+- Added unique MongoDB indexes for organization-scoped file fingerprints, idempotency keys and ingestion jobs.
+- Applied and verified 28 declared application indexes through `backend/scripts/create_indexes.py`.
+- Configured Redis-backed Celery workers and an ingestion queue.
+- Implemented background parsing, header mapping, row validation, normalization and job status/count updates.
+- Implemented tenant-scoped `GET /api/v1/uploads/{file_id}/status`.
+- Verified a three-row sample upload completed with 3 valid rows and 0 invalid rows.
+- Verified repeating the same request reused the original file and job IDs.
+- Verified a repeated file with a different idempotency key returned HTTP 409 Conflict.
+- Upload API tests: 11 passed.
+- Full backend test suite: **245 passed, 1 warning**.
+- Existing Starlette/httpx TestClient deprecation warning remains tracked for the quality phase.
+- Git implementation commit: `a8a86e4` (pushed to origin/main).
+- Git documentation checkpoint: Pending.
+
+**Chapter 22 implementation, live verification and implementation Git checkpoint are complete.**
+
 ## Notes
 
 - Chapter 10 remains Deferred.
