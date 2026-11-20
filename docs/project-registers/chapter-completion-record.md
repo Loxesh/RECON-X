@@ -1,4 +1,4 @@
-
+ï»¿
 # RECON X - Chapter Completion Record
 
 **Last Updated:** 19 November 2026
@@ -26,14 +26,14 @@
 | 17 | Secure upload API and object storage interface | Implemented secure file validation, authenticated upload endpoint, SHA-256 hashing and provider-independent storage interface | Completed |
 | 18 | S3-compatible object storage | Implemented SILO-based local S3-compatible storage, boto3 adapter and live storage operation verification | Completed |
 | 19 | CSV/XLSX parsing | Implemented CSV and multi-sheet XLSX parsing with source-row preservation and parser tests | Completed |
-| 20–21 | Upload and ingestion | Remaining ingestion workflow implementation | Not Started |
-| 22–27 | Reconciliation engine | Pending implementation and verification | Not Started |
-| 28–31 | Governance and AI | Pending implementation and verification | Not Started |
-| 32–37 | Agents and orchestration | Pending implementation and verification | Not Started |
-| 38–40 | Workers and reporting | Pending implementation and verification | Not Started |
-| 41–44 | Frontend implementation | Pending implementation and verification | Not Started |
-| 45–46 | Integration | Pending implementation and verification | Not Started |
-| 47–51 | Quality and delivery | Pending implementation and verification | Not Started |
+| 20ï¿½21 | Upload and ingestion | Remaining ingestion workflow implementation | Not Started |
+| 22ï¿½27 | Reconciliation engine | Pending implementation and verification | Not Started |
+| 28ï¿½31 | Governance and AI | Pending implementation and verification | Not Started |
+| 32ï¿½37 | Agents and orchestration | Pending implementation and verification | Not Started |
+| 38ï¿½40 | Workers and reporting | Pending implementation and verification | Not Started |
+| 41ï¿½44 | Frontend implementation | Pending implementation and verification | Not Started |
+| 45ï¿½46 | Integration | Pending implementation and verification | Not Started |
+| 47ï¿½51 | Quality and delivery | Pending implementation and verification | Not Started |
 | 52 | Optional deployment | Optional deployment preparation; only if required | Not Started |
 
 ## Chapter 07 Verification
@@ -316,7 +316,43 @@
 | Chapter 14 authentication | `06ee6c6` |
 | Chapter 15 RBAC | `ff257fe` |
 | Chapter 16 API infrastructure | `effc53c` |
-| Chapters 18–19 implementation | `2a40573` |
+| Chapters 18ï¿½19 implementation | `2a40573` |
+
+## Chapter 20 Verification
+
+### Header Mapping and Schema Validation
+
+- Implemented source-specific header aliases for BANK, LEDGER and GATEWAY formats.
+- Mapped recognised source headers into canonical transaction fields.
+- Added detection of missing required columns.
+- Added unknown, empty and ambiguous header reporting.
+- Implemented row-level required-field validation.
+- Preserved original row values, source row numbers and sheet information.
+- Prevented row validation when header mapping contains errors.
+- Added automated tests for all three source types and validation scenarios.
+- Chapter 20 tests: 11 passed.
+- Full backend test suite: 189 passed, 1 warning.
+
+### Chapter 20 Closure
+
+- Header mapping implementation: Passed.
+- Row validation implementation: Passed.
+- Chapter 20 tests: 11 passed.
+- Full backend test suite: 189 passed.
+- File inventory: Updated.
+- Chapter completion record: Updated.
+- Git implementation and documentation checkpoint: Pending.
+
+**Chapter 20 implementation and automated verification are complete.**
+Documentation and Git checkpoint remain pending.
+
+## Chapter 20 Notes
+
+- Header mapping supports BANK, LEDGER and GATEWAY source types.
+- Unknown and ambiguous headers are reported rather than guessed.
+- Invalid rows retain their original source data.
+- Financial date, amount and currency normalization is reserved for Chapter 21.
+
 
 ## Notes
 

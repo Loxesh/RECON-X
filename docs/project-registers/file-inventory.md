@@ -117,11 +117,12 @@
 
 ## Ingestion
 
-| File | Purpose |
-|---|---|
-| backend/app/ingestion/__init__.py | Ingestion package |
-| backend/app/ingestion/file_validator.py | File extension, MIME type, size, CSV and XLSX validation |
-| backend/app/ingestion/csv_xlsx_parser.py | CSV and multi-sheet XLSX parsing with source-row and sheet information preservation |
+File	Purpose
+backend/app/ingestion/__init__.py	Ingestion package
+backend/app/ingestion/file_validator.py	File extension, MIME type, size, CSV and XLSX validation
+backend/app/ingestion/csv_xlsx_parser.py	CSV and multi-sheet XLSX parsing with source-row and sheet information preservation
+backend/app/ingestion/header_mapper.py	Maps bank, ledger and gateway column aliases into canonical transaction fields
+backend/app/ingestion/validators.py	Validates mapped transaction rows and preserves row-level validation issues
 
 ## Integrations
 
@@ -158,6 +159,8 @@
 | backend/tests/test_object_storage.py | Local and mocked S3-compatible storage operation tests |
 | backend/tests/test_uploads.py | Authenticated upload API, metadata, storage and permission tests |
 | backend/tests/test_csv_xlsx_parser.py | CSV and XLSX parser behaviour, encoding, multi-sheet and malformed input tests |
+File	Purpose
+backend/tests/test_header_mapping.py	Header mapping, source-specific aliases, ambiguous headers and row validation tests
 
 ## Local Development Files
 
