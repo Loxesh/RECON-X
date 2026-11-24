@@ -246,3 +246,9 @@ These API groups remain planned for subsequent implementation chapters:
 - Defined matching outcomes, rule identifiers and evidence structures.
 - Matching results carry the ruleset version and SHA-256 ruleset fingerprint.
 - No reconciliation API endpoint is introduced in this chapter. API endpoints will be added in their designated workbook chapters.
+
+## Chapter 28 - Discrepancy Detection
+
+- Discrepancy detection and exception classification are internal reconciliation modules.
+- No HTTP endpoint or externally exposed API contract was introduced.
+- Existing exception document and response schema contracts were preserved.

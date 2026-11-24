@@ -1,4 +1,4 @@
-﻿
+
 # RECON X - Environment Variables Register
 
 **Last Updated:** 19 November 2026
@@ -80,3 +80,9 @@ Authentication, JWT configuration, request middleware, private S3-compatible obj
 - CSV and XLSX parsing implementation is available in the ingestion module.
 - Redis is configured for the Chapter 22 Celery background ingestion worker. LLM provider configuration remains planned for its designated chapter.
 - Planned variables must be introduced in their relevant implementation chapters.
+
+## Chapter 28 - Discrepancy Detection
+
+- No new environment variables were introduced.
+- Existing matching ruleset configuration is reused.
+- No fixed company-specific financial discrepancy threshold was added.

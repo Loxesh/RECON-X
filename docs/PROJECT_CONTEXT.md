@@ -129,16 +129,19 @@ Validation, permissions, evidence checks and human review remain mandatory safeg
 
 Total workbook chapters: 52.
 
-Officially completed: 26/52.
+Officially completed: 27/52.
 
-- Chapters 1–9 and 11–26: Completed.
+- Chapters 1–9 and 11–27: Completed.
 - Chapter 10: Deferred.
-- Chapter 27: Implementation and focused verification passed; documentation and Git milestone closure pending.
-- Chapters 28–52: Pending implementation.
+- Chapter 27: Completed; commit c7369e0 pushed.
+- Chapter 28: Implementation and focused verification passed; documentation and Git closure in progress.
+- Chapters 29–52: Pending implementation.
 
 Chapter 25 focused tests: 19 passed.
 Chapter 26 focused tests: 8 passed.
 Chapter 27 focused tests: 15 passed.
+Chapter 28 focused tests: 22 passed.
+Chapter 28 model regression tests: 51 passed.
 
 The full backend suite was not rerun after Chapter 26.
 ## 9. Current Reconciliation Modules
@@ -150,6 +153,8 @@ The full backend suite was not rerun after Chapter 26.
 - `backend/app/reconciliation/aggregate_match.py`
 - `backend/app/reconciliation/duplicate_detector.py`
 - `backend/app/reconciliation/missing_detector.py`
+- `backend/app/reconciliation/discrepancy_detector.py`
+- `backend/app/reconciliation/exception_classifier.py`
 
 Related tests:
 - `backend/tests/test_reconciliation_rules.py`
@@ -158,6 +163,8 @@ Related tests:
 - `backend/tests/test_aggregate_match.py`
 - `backend/tests/test_duplicate_detector.py`
 - `backend/tests/test_missing_detector.py`
+- `backend/tests/test_discrepancy_detector.py`
+- `backend/tests/test_exception_classifier.py`
 
 ## 10. Development and Git Workflow
 

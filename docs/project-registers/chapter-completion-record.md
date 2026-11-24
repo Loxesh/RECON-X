@@ -615,5 +615,40 @@
 
 - Implementation verification: Passed.
 - Focused tests: 15 passed.
-- Documentation update: In progress.
+- Documentation update: Completed.
+- Git implementation and documentation milestone: Commit c7369e0, pushed to origin/main.
+
+## Chapter 28 Verification — Discrepancy Detection and Exception Classification
+
+### Implementation
+
+- Created `backend/app/reconciliation/discrepancy_detector.py`.
+- Created `backend/app/reconciliation/exception_classifier.py`.
+- Implemented deterministic discrepancy detection for supported mismatch categories.
+- Used Decimal-based financial difference handling.
+- Prevented implicit foreign-exchange conversion.
+- Reused configurable reconciliation rules.
+- Implemented structured exception classification with source evidence, severity, suggested action and lifecycle state.
+- Preserved existing exception document and API contracts.
+- No API endpoint, database persistence or environment variable was introduced.
+
+### Verification
+
+- Created `backend/tests/test_discrepancy_detector.py`.
+- Created `backend/tests/test_exception_classifier.py`.
+- Chapter 28 focused tests: 22 passed.
+- Existing model regression tests: 51 passed.
+- Python compilation verification: Passed.
+- Staged implementation and test files passed `git diff --cached --check`.
+- Full backend suite has not been rerun after Chapter 26.
+
+### Documentation and Git Closure
+
+- Project context: Updated.
+- Chapter completion record: Updated.
+- File inventory: Updated.
+- API contract register: No new API endpoint introduced.
+- Environment variables register: No new variables introduced.
 - Git implementation and documentation milestone: Pending.
+
+**Chapter 28 implementation and focused verification are complete. Official chapter closure remains pending the Git milestone.**

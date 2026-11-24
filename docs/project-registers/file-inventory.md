@@ -279,10 +279,14 @@ backend/tests/test_header_mapping.py	Header mapping, source-specific aliases, am
 | backend/app/reconciliation/aggregate_match.py | Explicit one-to-many and many-to-one candidate group evaluation using exact Decimal totals and evidence |
 | backend/app/reconciliation/duplicate_detector.py | Deterministic business transaction fingerprinting and duplicate/reference-conflict classification |
 | backend/app/reconciliation/missing_detector.py | Source-presence comparison and missing transaction classification |
+| backend/app/reconciliation/discrepancy_detector.py | Deterministic discrepancy detection with evidence |
+| backend/app/reconciliation/exception_classifier.py | Exception classification with severity, source evidence and lifecycle state |
 | backend/tests/test_fuzzy_match.py | Fuzzy matching tests covering similarity, tolerances, ambiguous candidates, deterministic ordering and validation |
 | backend/tests/test_aggregate_match.py | Aggregate matching tests covering group direction, Decimal totals, constraints and validation |
 | backend/tests/test_duplicate_detector.py | Duplicate fingerprint, legitimate repeated payment and reference-conflict tests |
 | backend/tests/test_missing_detector.py | Missing-side classification, source-pair validation and evidence tests |
+| backend/tests/test_discrepancy_detector.py | Discrepancy detection and Decimal handling tests |
+| backend/tests/test_exception_classifier.py | Exception taxonomy, severity, evidence and lifecycle tests |
 
 ### Dependency Addition
 
