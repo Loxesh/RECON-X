@@ -1,4 +1,4 @@
-﻿
+
 # RECON X - Chapter Completion Record
 
 **Last Updated:** 20 November 2026
@@ -510,8 +510,74 @@
 - File inventory: Updated.
 - API contract register: No changes required.
 - Environment variables register: No changes required.
-- Git implementation commit: Pending.
-- Git documentation commit: Pending.
-- Git push: Pending.
+- Git implementation commit: `b56345f` (pushed to origin/main).
+- Git documentation commit: `5f6f40d` (pushed to origin/main).
+- Git push: Verified.
 
-**Chapter 24 implementation and automated verification are successful. Git checkpoints remain pending.**
+**Chapter 24 implementation, verification, documentation and Git checkpoints are complete.**
+
+## Chapter 25 Verification – Fuzzy Candidate Matching
+
+### Implementation
+
+- Created `backend/app/reconciliation/fuzzy_match.py`.
+- Implemented fuzzy reference similarity using RapidFuzz on normalized transaction references.
+- Added configurable fuzzy similarity threshold from the matching ruleset.
+- Enforced configured suggested amount tolerance.
+- Enforced source-specific transaction date windows.
+- Restricted supported cross-source pairs to BANK–LEDGER and GATEWAY–LEDGER.
+- Enforced currency equality, unique transaction IDs and UTC-aware dates.
+- Implemented deterministic candidate ordering.
+- Implemented AMBIGUOUS outcomes for tied highest-scoring candidates.
+- Qualifying fuzzy candidates return SUGGESTED and are never automatically confirmed.
+- Included matching evidence, candidate score, ruleset version and fingerprint.
+- Added RapidFuzz runtime dependency to `backend/pyproject.toml`.
+- No API endpoint or database persistence was introduced.
+
+### Verification
+
+- Created `backend/tests/test_fuzzy_match.py`.
+- Focused fuzzy matching tests: **19 passed**.
+- Verified reference typos, amount tolerance, date windows, currency, missing references, ambiguous candidates, deterministic ordering and UTC validation.
+- Full backend suite was not rerun after Chapter 26.
+
+### Closure Status
+
+- Implementation verification: Passed.
+- Focused tests: 19 passed.
+- Documentation update: In progress.
+- Git implementation checkpoint: Pending.
+- Git documentation checkpoint: Pending.
+
+## Chapter 26 Verification – Aggregate and One-to-Many Matching
+
+### Implementation
+
+- Created `backend/app/reconciliation/aggregate_match.py`.
+- Implemented explicit one-to-many and many-to-one candidate group evaluation.
+- Enforced supported BANK–LEDGER and GATEWAY–LEDGER source pairs.
+- Enforced unique transaction IDs and consistent source types within grouped transactions.
+- Enforced currency equality and configured date windows.
+- Calculated aggregate totals using exact Decimal arithmetic.
+- Enforced the configured maximum group size across the complete candidate group.
+- Exact aggregate totals produce SUGGESTED outcomes, never automatic confirmations.
+- Evidence includes singleton and grouped transaction IDs, amounts, totals, currency, dates and group size.
+- Preserved ruleset version and fingerprint.
+- Candidate combination generation and database persistence are not implemented in this module.
+- No API endpoint or database persistence was introduced.
+
+### Verification
+
+- Created `backend/tests/test_aggregate_match.py`.
+- Focused aggregate matching tests: **8 passed**.
+- Verified one-to-many and many-to-one totals, non-confirmation, amount mismatch, currency mismatch, date windows, group-size limits and UTC validation.
+
+### Closure Status
+
+- Implementation verification: Passed.
+- Focused tests: 8 passed.
+- Documentation update: In progress.
+- Git implementation checkpoint: Pending.
+- Git documentation checkpoint: Pending.
+
+**Chapters 25 and 26 have passed their focused implementation tests. They are not yet officially complete because their documentation and Git milestone closure remain pending.**
