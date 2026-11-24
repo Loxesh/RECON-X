@@ -34,8 +34,8 @@
 | 25 | Fuzzy candidate matching | Implemented RapidFuzz candidate matching; 19 focused tests passed; closed in commit 066e5df | Completed |
 | 26 | Aggregate and one-to-many matching | Implemented explicit aggregate candidate evaluation; 8 focused tests passed; closed in commit 066e5df | Completed |
 | 27 | Duplicate and missing detection | Implemented deterministic duplicate fingerprints and source-presence classification; 15 focused tests passed; Git checkpoint recorded as c7369e0 | Completed |
-| 28 | Discrepancy detection and exception classification | Implemented discrepancy evidence generation and exception classification; 22 focused tests passed; Git closure pending | In Progress |
-| 29 | Reconciliation status and full engine integration | Integrated independent bank-ledger and gateway-ledger tracks, matching cascade, residual classification and consolidated status calculations; 10 focused tests and 358 full-suite tests passed; Git closure pending | In Progress |
+| 28 | Discrepancy detection and exception classification | Implemented discrepancy evidence generation and exception classification; 22 focused tests passed; Git milestone committed and pushed in e122983 | Completed |
+| 29 | Reconciliation status and full engine integration | Integrated independent bank-ledger and gateway-ledger tracks, matching cascade, residual classification and consolidated status calculations; 10 focused tests and 358 full-suite tests passed; Git milestone committed and pushed in e122983 | Completed |
 | 30-33 | Governance and AI | Pending implementation and verification | Not Started |
 | 34-39 | Agents and orchestration | Pending implementation and verification | Not Started |
 | 40-42 | Workers and reporting | Pending implementation and verification | Not Started |
@@ -650,9 +650,9 @@
 - File inventory: Updated.
 - API contract register: No new API endpoint introduced.
 - Environment variables register: No new variables introduced.
-- Git implementation and documentation milestone: Pending.
+- Git implementation and documentation milestone: Committed and pushed in e122983.
 
-**Chapter 28 implementation and focused verification are complete. Official chapter closure remains pending the Git milestone.**
+**Chapter 28 is complete. Implementation, focused verification, documentation and Git milestone were completed; commit e122983 is pushed to origin/main.**
 
 
 ## Chapter 29 Verification
@@ -675,5 +675,5 @@
 
 - Implementation verification: Passed.
 - Automated verification: Passed.
-- Documentation update: In progress.
-- Git checkpoint: Pending.
+- Documentation update: Completed.
+- Git checkpoint: Committed and pushed as e122983 to origin/main.

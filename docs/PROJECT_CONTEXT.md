@@ -134,14 +134,14 @@ Validation, permissions, evidence checks and human review remain mandatory safeg
 
 Total workbook chapters: 52.
 
-Officially completed: 27/52.
+Officially completed: 29/52.
 
 - Chapters 1–9 and 11–27: Completed.
 - Chapter 10: Deferred.
 - Chapter 27: Completed; commit c7369e0 pushed.
-- Chapter 28: Implementation and focused verification passed; documentation and Git closure in progress.
+- Chapter 28: Completed; implementation, focused verification and Git milestone e122983 pushed.
 
-- Chapter 29: Implementation and verification passed; documentation and Git closure in progress.
+- Chapter 29: Completed; implementation, 358 full-suite tests passed, and Git milestone e122983 pushed.
 - Chapters 30-52: Pending implementation.
 
 Chapter 25 focused tests: 19 passed.
