@@ -136,21 +136,26 @@ Total workbook chapters: 52.
 
 Officially completed: 29/52.
 
-- Chapters 1–9 and 11–27: Completed.
+- Chapters 1-9 and 11-29: Completed.
 - Chapter 10: Deferred.
-- Chapter 27: Completed; commit c7369e0 pushed.
-- Chapter 28: Completed; implementation, focused verification and Git milestone e122983 pushed.
+- Chapter 30: Implementation and automated verification passed; documentation and Git checkpoint in progress.
+- Chapters 31-52: Pending implementation.
 
-- Chapter 29: Completed; implementation, 358 full-suite tests passed, and Git milestone e122983 pushed.
-- Chapters 30-52: Pending implementation.
+Chapter 30 verification:
+- Audit-chain focused tests: 4 passed.
+- Repository, model and permission regression tests: 98 passed.
+- Full backend test suite: 362 passed, 1 warning.
+- Git milestone: Pending.
 
-Chapter 25 focused tests: 19 passed.
-Chapter 26 focused tests: 8 passed.
-Chapter 27 focused tests: 15 passed.
-Chapter 28 focused tests: 22 passed.
-Chapter 28 model regression tests: 51 passed.
+Earlier chapter focused verification records:
+- Chapter 25: 19 focused tests passed.
+- Chapter 26: 8 focused tests passed.
+- Chapter 27: 15 focused tests passed.
+- Chapter 28: 22 focused tests passed.
+- Chapter 28 model regression tests: 51 passed.
 
-The full backend suite was not rerun after Chapter 26.
+The official completion count will be updated after the Chapter 30 documentation and Git milestone are committed and pushed.
+
 ## 9. Current Reconciliation Modules
 
 - `backend/app/reconciliation/schemas.py`

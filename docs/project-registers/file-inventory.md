@@ -314,3 +314,17 @@ backend/tests/test_header_mapping.py	Header mapping, source-specific aliases, am
 - No HTTP endpoints, database persistence or environment variables were introduced.
 - Focused Chapter 29 tests: 10 passed.
 - Full backend test suite: 358 passed, 1 warning.
+
+
+## Chapter 30 Additions - Audit Governance
+
+| File | Purpose |
+|---|---|
+| backend/app/governance/__init__.py | Governance package exports |
+| backend/app/governance/audit_logger.py | Audit logging service interface |
+| backend/app/governance/audit_repository.py | Tenant-scoped transactional audit append, canonical hashing and chain verification |
+| backend/tests/test_audit_chain.py | Audit append, concurrent sequence, chain verification and tamper-detection tests |
+
+- Reuses the existing `audit_events` MongoDB collection and indexes.
+- No new API endpoints, collections or environment variables were introduced.
+- Full backend suite after Chapter 30: 362 passed, 1 warning.

@@ -677,3 +677,38 @@
 - Automated verification: Passed.
 - Documentation update: Completed.
 - Git checkpoint: Committed and pushed as e122983 to origin/main.
+
+
+## Chapter 30 Verification - Audit Event Model and Hash-Chain Writer
+
+### Implementation
+
+- Created `backend/app/governance/__init__.py`.
+- Created `backend/app/governance/audit_logger.py`.
+- Created `backend/app/governance/audit_repository.py`.
+- Created `backend/tests/test_audit_chain.py`.
+- Implemented canonical audit payload hashing using SHA-256.
+- Implemented per-tenant sequence allocation and hash chaining.
+- Implemented transaction-based append with concurrency conflict retries.
+- Normalized timestamps to BSON millisecond precision before hashing.
+- Implemented chain verification and tamper detection.
+- Preserved the existing tenant-scoped audit repository API and collection.
+- Reused the existing unique `(org_id, seq)` index.
+- No new collection, API endpoint or environment variable was introduced.
+
+### Verification
+
+- Audit append and chain verification tests: 4 passed.
+- Existing repository, model and permission tests: 98 passed.
+- Full backend test suite: 362 passed, 1 warning.
+- Concurrent append test verified unique sequence positions.
+- Payload and previous-hash tampering tests detected modifications.
+- Existing Starlette/httpx TestClient deprecation warning remains tracked.
+
+### Closure Status
+
+- Implementation verification: Passed.
+- Automated verification: Passed.
+- Documentation update: Completed.
+- Git implementation and documentation milestone: Pending.
+- Official chapter completion remains pending the Git checkpoint.
