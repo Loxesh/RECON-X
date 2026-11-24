@@ -55,15 +55,7 @@ Final financial decisions remain under human control through the approved Human 
 
 ## 4. Reconciliation Architecture
 
-The reconciliation engine uses configurable matching passes:
-
-1. Duplicate detection
-2. Exact matching
-3. Reference matching
-4. Tolerance matching
-5. Fuzzy matching
-6. Aggregate matching
-7. Residual handling
+The reconciliation engine uses independent BANK-LEDGER and GATEWAY-LEDGER tracks. Each track maintains its own matching decisions, evidence, ruleset identity and exceptions. A ledger transaction may participate in both tracks because they represent separate source comparisons. A transaction can be consumed only once within its own track.
 
 Supported transaction sources:
 - BANK
@@ -71,8 +63,19 @@ Supported transaction sources:
 - GATEWAY
 
 Supported cross-source pairs:
-- BANK–LEDGER
-- GATEWAY–LEDGER
+- BANK-LEDGER
+- GATEWAY-LEDGER
+
+The matching cascade is:
+
+1. Exact stable transaction ID or approved reference matching with amount and currency consistency.
+2. Deterministic reference/date-window matching with configured amount tolerance.
+3. Fuzzy candidate matching; candidate scores are evidence for review, not proof.
+4. Explicit aggregate candidate evaluation for permitted one-to-many or many-to-one groups.
+5. Duplicate and missing transaction detection.
+6. Residual discrepancy classification.
+
+Aggregate matching evaluates explicitly supplied candidate groups. It does not generate every possible group combination and never automatically confirms a financial match.
 
 Matching outcomes include:
 - CONFIRMED_AUTO
@@ -80,11 +83,13 @@ Matching outcomes include:
 - AMBIGUOUS
 - UNMATCHED
 
-Fuzzy and aggregate matching produce suggestions, not automatic financial confirmations.
+Fuzzy and aggregate outcomes remain suggestions and are not automatic financial confirmations. Equally plausible candidates remain ambiguous; the engine must not silently select one.
 
-Duplicate detection flags potential duplicates and reference conflicts; it does not delete transactions. Missing detection classifies unmatched records by their absent counterpart source.
+Duplicate detection identifies potential duplicates and reference conflicts. It does not delete or merge transactions. Missing detection classifies residual unmatched records by their absent counterpart source.
 
-Financial comparisons use Decimal values. Currency equality and configured date windows are enforced.
+Discrepancy classification retains evidence for detected differences. Each track maintains independent results. Consolidated reporting counts shared ledger source records only once and must not mix financial decisions across tracks.
+
+Financial comparisons use Python Decimal values. Currency equality and configured date windows are enforced. Matching decisions retain ruleset identity and supporting evidence. AI-generated explanations remain advisory; final financial decisions stay under human control through the approved Human in the Loop process.
 
 ## 5. AI and Agent Governance
 
@@ -135,7 +140,9 @@ Officially completed: 27/52.
 - Chapter 10: Deferred.
 - Chapter 27: Completed; commit c7369e0 pushed.
 - Chapter 28: Implementation and focused verification passed; documentation and Git closure in progress.
-- Chapters 29–52: Pending implementation.
+
+- Chapter 29: Implementation and verification passed; documentation and Git closure in progress.
+- Chapters 30-52: Pending implementation.
 
 Chapter 25 focused tests: 19 passed.
 Chapter 26 focused tests: 8 passed.

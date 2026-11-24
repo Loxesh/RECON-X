@@ -256,6 +256,8 @@ backend/tests/test_header_mapping.py	Header mapping, source-specific aliases, am
 | backend/app/reconciliation/__init__.py | Reconciliation package |
 | backend/app/reconciliation/schemas.py | Immutable matching input, output, outcome, rule and evidence schemas |
 | backend/app/reconciliation/rules.py | Validated matching ruleset configuration, deterministic fingerprint and immutable ruleset snapshots |
+| backend/app/reconciliation/status_calculator.py | Calculates per-track and consolidated reconciliation outcomes, source totals and status summaries |
+| backend/app/reconciliation/engine.py | Integrates matching passes, independent reconciliation tracks, residual classification and consolidated summaries |
 
 ## Reconciliation Tests
 
@@ -287,6 +289,7 @@ backend/tests/test_header_mapping.py	Header mapping, source-specific aliases, am
 | backend/tests/test_missing_detector.py | Missing-side classification, source-pair validation and evidence tests |
 | backend/tests/test_discrepancy_detector.py | Discrepancy detection and Decimal handling tests |
 | backend/tests/test_exception_classifier.py | Exception taxonomy, severity, evidence and lifecycle tests |
+| backend/tests/test_reconciliation_engine.py | Synthetic dual-track reconciliation integration tests |
 
 ### Dependency Addition
 
@@ -297,3 +300,17 @@ backend/tests/test_header_mapping.py	Header mapping, source-specific aliases, am
 - Fuzzy and aggregate matching produce suggestions, not automatic financial confirmations.
 - Aggregate matching evaluates explicitly supplied candidate groups; it does not generate all possible combinations.
 - No API endpoints, database persistence or environment variables were added.
+
+
+## Chapter 29 Additions - Reconciliation Engine
+
+- Implemented independent BANK-LEDGER and GATEWAY-LEDGER reconciliation tracks.
+- Each track maintains independent matching decisions and evidence.
+- Shared ledger transactions are not double-counted in consolidated source totals.
+- Integrated exact, tolerance, fuzzy and explicitly supplied aggregate candidate evaluation.
+- Fuzzy and aggregate outcomes remain suggestions, not automatic confirmations.
+- Integrated duplicate, missing and discrepancy handling for residual transactions.
+- Reconciliation outcomes use source-qualified transaction keys.
+- No HTTP endpoints, database persistence or environment variables were introduced.
+- Focused Chapter 29 tests: 10 passed.
+- Full backend test suite: 358 passed, 1 warning.

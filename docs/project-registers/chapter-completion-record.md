@@ -33,8 +33,9 @@
 | 24 | Exact transaction matching | Implemented deterministic exact matching; 21 focused tests passed; implementation and documentation commits pushed | Completed |
 | 25 | Fuzzy candidate matching | Implemented RapidFuzz candidate matching; 19 focused tests passed; closed in commit 066e5df | Completed |
 | 26 | Aggregate and one-to-many matching | Implemented explicit aggregate candidate evaluation; 8 focused tests passed; closed in commit 066e5df | Completed |
-| 27 | Duplicate and missing detection | Implemented deterministic duplicate fingerprints and source-presence classification; 15 focused tests passed; documentation and Git closure pending | In Progress |
-| 28-29 | Reconciliation engine | Pending implementation and verification | Not Started |
+| 27 | Duplicate and missing detection | Implemented deterministic duplicate fingerprints and source-presence classification; 15 focused tests passed; Git checkpoint recorded as c7369e0 | Completed |
+| 28 | Discrepancy detection and exception classification | Implemented discrepancy evidence generation and exception classification; 22 focused tests passed; Git closure pending | In Progress |
+| 29 | Reconciliation status and full engine integration | Integrated independent bank-ledger and gateway-ledger tracks, matching cascade, residual classification and consolidated status calculations; 10 focused tests and 358 full-suite tests passed; Git closure pending | In Progress |
 | 30-33 | Governance and AI | Pending implementation and verification | Not Started |
 | 34-39 | Agents and orchestration | Pending implementation and verification | Not Started |
 | 40-42 | Workers and reporting | Pending implementation and verification | Not Started |
@@ -652,3 +653,27 @@
 - Git implementation and documentation milestone: Pending.
 
 **Chapter 28 implementation and focused verification are complete. Official chapter closure remains pending the Git milestone.**
+
+
+## Chapter 29 Verification
+
+### Reconciliation Engine
+
+- Implemented `backend/app/reconciliation/status_calculator.py`.
+- Implemented `backend/app/reconciliation/engine.py`.
+- Created `backend/tests/test_reconciliation_engine.py`.
+- Integrated independent BANK-LEDGER and GATEWAY-LEDGER reconciliation tracks.
+- Ensured shared ledger transactions are not double-counted in consolidated source totals.
+- Integrated exact, tolerance, fuzzy and explicit aggregate candidate evaluation.
+- Preserved ambiguous outcomes rather than silently selecting equally plausible candidates.
+- Integrated duplicate, missing and discrepancy handling for residual transactions.
+- Focused Chapter 29 tests: 10 passed.
+- Full backend test suite: 358 passed, 1 warning.
+- Existing Starlette/httpx TestClient deprecation warning remains tracked for the quality phase.
+
+### Chapter 29 Closure
+
+- Implementation verification: Passed.
+- Automated verification: Passed.
+- Documentation update: In progress.
+- Git checkpoint: Pending.
