@@ -1,7 +1,7 @@
 
 # RECON X - File Inventory
 
-**Last Updated:** 20 November 2026
+**Last Updated:** 24 November 2026
 
 ## Root Structure
 
@@ -262,3 +262,11 @@ backend/tests/test_header_mapping.py	Header mapping, source-specific aliases, am
 | File | Purpose |
 |---|---|
 | backend/tests/test_reconciliation_rules.py | Matching schema validation, ruleset defaults, tolerance bounds, priority validation, immutability and snapshot integrity tests |
+
+
+## Chapter 24 Additions - Exact Transaction Matching
+
+| File | Purpose |
+|---|---|
+| backend/app/reconciliation/exact_match.py | Deterministic exact transaction ID and normalized reference matching with UTC date validation, currency, Decimal amount, configured date-window and evidence validation |
+| backend/tests/test_exact_match.py | Exact matching tests covering transaction IDs, references, date windows, amounts, currencies, ruleset identity, deterministic results and UTC validation |
