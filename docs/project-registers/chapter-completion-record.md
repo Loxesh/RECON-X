@@ -1,7 +1,7 @@
 
 # RECON X - Chapter Completion Record
 
-**Last Updated:** 20 November 2026
+**Last Updated:** 24 November 2026
 
 ## Chapter Progress Summary
 
@@ -29,7 +29,12 @@
 | 20 | Header mapping and schema validation | Implemented BANK, LEDGER and GATEWAY header mapping and row-level validation | Completed |
 | 21 | Canonical normalization and provenance | Implemented Decimal/date/currency/direction normalization and deterministic source provenance; 240 tests passed; implementation and documentation commits pushed | Completed |
 | 22 | Duplicate ingestion and job lifecycle | Implemented idempotent upload registration, duplicate fingerprint protection, Celery/Redis background ingestion, observable job status and row counts; 245 tests passed | Completed |
-| 23-29 | Reconciliation engine | Pending implementation and verification | Not Started |
+| 23 | Matching data contracts and ruleset configuration | Implemented immutable matching schemas and versioned ruleset configuration; 18 focused tests passed | Completed |
+| 24 | Exact transaction matching | Implemented deterministic exact matching; 21 focused tests passed; implementation and documentation commits pushed | Completed |
+| 25 | Fuzzy candidate matching | Implemented RapidFuzz candidate matching; 19 focused tests passed; closed in commit 066e5df | Completed |
+| 26 | Aggregate and one-to-many matching | Implemented explicit aggregate candidate evaluation; 8 focused tests passed; closed in commit 066e5df | Completed |
+| 27 | Duplicate and missing detection | Implemented deterministic duplicate fingerprints and source-presence classification; 15 focused tests passed; documentation and Git closure pending | In Progress |
+| 28-29 | Reconciliation engine | Pending implementation and verification | Not Started |
 | 30-33 | Governance and AI | Pending implementation and verification | Not Started |
 | 34-39 | Agents and orchestration | Pending implementation and verification | Not Started |
 | 40-42 | Workers and reporting | Pending implementation and verification | Not Started |
@@ -320,8 +325,8 @@
 | Chapter 14 authentication | `06ee6c6` |
 | Chapter 15 RBAC | `ff257fe` |
 | Chapter 16 API infrastructure | `effc53c` |
-| Chapters 18–19 implementation | `2a40573` |
-| Chapters 18–19 documentation closure | `5cec76f` |
+| Chapters 18â€“19 implementation | `2a40573` |
+| Chapters 18â€“19 documentation closure | `5cec76f` |
 | Chapter 20 implementation and verification | `24eca0b` |
 
 ## Chapter 20 Verification
@@ -440,14 +445,14 @@
 
 ---
 
-## Chapter 23 Verification — Matching Data Contracts and Ruleset Configuration
+## Chapter 23 Verification â€” Matching Data Contracts and Ruleset Configuration
 
 - Created `backend/app/reconciliation/` package.
 - Implemented immutable matching transaction and pair input schemas.
 - Implemented matching outcome, rule identifier, evidence and result schemas.
 - Implemented configurable matching ruleset with the approved starting defaults:
-  - Bank-ledger date window: ±2 days.
-  - Gateway-ledger date window: ±3 days.
+  - Bank-ledger date window: Â±2 days.
+  - Gateway-ledger date window: Â±3 days.
   - Auto-confirm amount tolerance: 0.00.
   - Suggested amount tolerance: 1.00.
   - Fuzzy matching threshold: 0.85.
@@ -516,7 +521,7 @@
 
 **Chapter 24 implementation, verification, documentation and Git checkpoints are complete.**
 
-## Chapter 25 Verification – Fuzzy Candidate Matching
+## Chapter 25 Verification â€“ Fuzzy Candidate Matching
 
 ### Implementation
 
@@ -525,7 +530,7 @@
 - Added configurable fuzzy similarity threshold from the matching ruleset.
 - Enforced configured suggested amount tolerance.
 - Enforced source-specific transaction date windows.
-- Restricted supported cross-source pairs to BANK–LEDGER and GATEWAY–LEDGER.
+- Restricted supported cross-source pairs to BANKâ€“LEDGER and GATEWAYâ€“LEDGER.
 - Enforced currency equality, unique transaction IDs and UTC-aware dates.
 - Implemented deterministic candidate ordering.
 - Implemented AMBIGUOUS outcomes for tied highest-scoring candidates.
@@ -545,17 +550,17 @@
 
 - Implementation verification: Passed.
 - Focused tests: 19 passed.
-- Documentation update: In progress.
-- Git implementation checkpoint: Pending.
-- Git documentation checkpoint: Pending.
+- Documentation: Completed.
+- Git implementation and documentation milestone: Commit `066e5df`, pushed to origin/main.
 
-## Chapter 26 Verification – Aggregate and One-to-Many Matching
+**Chapter 25 implementation, verification, documentation and Git milestone are complete.**
+## Chapter 26 Verification â€“ Aggregate and One-to-Many Matching
 
 ### Implementation
 
 - Created `backend/app/reconciliation/aggregate_match.py`.
 - Implemented explicit one-to-many and many-to-one candidate group evaluation.
-- Enforced supported BANK–LEDGER and GATEWAY–LEDGER source pairs.
+- Enforced supported BANKâ€“LEDGER and GATEWAYâ€“LEDGER source pairs.
 - Enforced unique transaction IDs and consistent source types within grouped transactions.
 - Enforced currency equality and configured date windows.
 - Calculated aggregate totals using exact Decimal arithmetic.
@@ -576,8 +581,39 @@
 
 - Implementation verification: Passed.
 - Focused tests: 8 passed.
-- Documentation update: In progress.
-- Git implementation checkpoint: Pending.
-- Git documentation checkpoint: Pending.
+- Documentation: Completed.
+- Git implementation and documentation milestone: Commit `066e5df`, pushed to origin/main.
 
-**Chapters 25 and 26 have passed their focused implementation tests. They are not yet officially complete because their documentation and Git milestone closure remain pending.**
+**Chapter 26 implementation, verification, documentation and Git milestone are complete.**
+
+## Chapter 27 Verification — Duplicate and Missing Detection
+
+### Implementation
+
+- Created `backend/app/reconciliation/duplicate_detector.py`.
+- Implemented deterministic SHA-256 business fingerprints using source type, transaction date, Decimal amount, currency, normalized reference and normalized narrative.
+- Excluded file provenance, source row and internal transaction ID from business duplicate identity.
+- Implemented DUPLICATE and REFERENCE_CONFLICT classifications.
+- Duplicate detection flags records and never deletes transactions.
+- Created `backend/app/reconciliation/missing_detector.py`.
+- Implemented source-presence comparison for BANK–LEDGER and GATEWAY–LEDGER.
+- Implemented MISSING_FROM_BANK, MISSING_FROM_LEDGER and MISSING_FROM_GATEWAY classifications.
+- Included transaction identifiers and source information in evidence.
+- Implemented deterministic result ordering.
+- No API endpoint, database persistence or environment variables were introduced.
+
+### Verification
+
+- Created `backend/tests/test_duplicate_detector.py`.
+- Created `backend/tests/test_missing_detector.py`.
+- Duplicate detector tests: 8 passed.
+- Missing detector tests: 7 passed.
+- Combined focused tests: 15 passed.
+- Verified duplicate fingerprints, legitimate repeated payments, reference conflicts, missing-side classifications and unsupported source pairs.
+
+### Closure Status
+
+- Implementation verification: Passed.
+- Focused tests: 15 passed.
+- Documentation update: In progress.
+- Git implementation and documentation milestone: Pending.

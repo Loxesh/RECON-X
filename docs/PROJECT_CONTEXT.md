@@ -1,4 +1,5 @@
-﻿# RECON X – Project Context
+
+# RECON X – Project Context
 
 **Last Updated:** 24 November 2026
 
@@ -81,6 +82,8 @@ Matching outcomes include:
 
 Fuzzy and aggregate matching produce suggestions, not automatic financial confirmations.
 
+Duplicate detection flags potential duplicates and reference conflicts; it does not delete transactions. Missing detection classifies unmatched records by their absent counterpart source.
+
 Financial comparisons use Decimal values. Currency equality and configured date windows are enforced.
 
 ## 5. AI and Agent Governance
@@ -126,20 +129,18 @@ Validation, permissions, evidence checks and human review remain mandatory safeg
 
 Total workbook chapters: 52.
 
-Officially completed: 24/52.
+Officially completed: 26/52.
 
-- Chapters 1–24: Completed.
+- Chapters 1–9 and 11–26: Completed.
 - Chapter 10: Deferred.
-- Chapter 25: Implementation and focused verification passed; documentation/Git closure pending.
-- Chapter 26: Implementation and focused verification passed; documentation/Git closure pending.
-- Remaining chapters: Pending implementation.
+- Chapter 27: Implementation and focused verification passed; documentation and Git milestone closure pending.
+- Chapters 28–52: Pending implementation.
 
 Chapter 25 focused tests: 19 passed.
-
 Chapter 26 focused tests: 8 passed.
+Chapter 27 focused tests: 15 passed.
 
 The full backend suite was not rerun after Chapter 26.
-
 ## 9. Current Reconciliation Modules
 
 - `backend/app/reconciliation/schemas.py`
@@ -147,12 +148,16 @@ The full backend suite was not rerun after Chapter 26.
 - `backend/app/reconciliation/exact_match.py`
 - `backend/app/reconciliation/fuzzy_match.py`
 - `backend/app/reconciliation/aggregate_match.py`
+- `backend/app/reconciliation/duplicate_detector.py`
+- `backend/app/reconciliation/missing_detector.py`
 
 Related tests:
 - `backend/tests/test_reconciliation_rules.py`
 - `backend/tests/test_exact_match.py`
 - `backend/tests/test_fuzzy_match.py`
 - `backend/tests/test_aggregate_match.py`
+- `backend/tests/test_duplicate_detector.py`
+- `backend/tests/test_missing_detector.py`
 
 ## 10. Development and Git Workflow
 

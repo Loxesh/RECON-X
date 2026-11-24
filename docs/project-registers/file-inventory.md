@@ -271,20 +271,24 @@ backend/tests/test_header_mapping.py	Header mapping, source-specific aliases, am
 | backend/app/reconciliation/exact_match.py | Deterministic exact transaction ID and normalized reference matching with UTC date validation, currency, Decimal amount, configured date-window and evidence validation |
 | backend/tests/test_exact_match.py | Exact matching tests covering transaction IDs, references, date windows, amounts, currencies, ruleset identity, deterministic results and UTC validation |
 
-## Chapter 25–26 Additions – Reconciliation Matching
+## Chapter 25â€“26 Additions â€“ Reconciliation Matching
 
 | File | Purpose |
 |---|---|
 | backend/app/reconciliation/fuzzy_match.py | Fuzzy transaction reference candidate matching using RapidFuzz, configured amount/date tolerances, deterministic candidate ordering and evidence |
 | backend/app/reconciliation/aggregate_match.py | Explicit one-to-many and many-to-one candidate group evaluation using exact Decimal totals and evidence |
+| backend/app/reconciliation/duplicate_detector.py | Deterministic business transaction fingerprinting and duplicate/reference-conflict classification |
+| backend/app/reconciliation/missing_detector.py | Source-presence comparison and missing transaction classification |
 | backend/tests/test_fuzzy_match.py | Fuzzy matching tests covering similarity, tolerances, ambiguous candidates, deterministic ordering and validation |
 | backend/tests/test_aggregate_match.py | Aggregate matching tests covering group direction, Decimal totals, constraints and validation |
+| backend/tests/test_duplicate_detector.py | Duplicate fingerprint, legitimate repeated payment and reference-conflict tests |
+| backend/tests/test_missing_detector.py | Missing-side classification, source-pair validation and evidence tests |
 
 ### Dependency Addition
 
 - `backend/pyproject.toml`: Added RapidFuzz runtime dependency (`rapidfuzz>=3.9,<4.0`).
 
-### Chapter 25–26 Notes
+### Chapter 25â€“26 Notes
 
 - Fuzzy and aggregate matching produce suggestions, not automatic financial confirmations.
 - Aggregate matching evaluates explicitly supplied candidate groups; it does not generate all possible combinations.
