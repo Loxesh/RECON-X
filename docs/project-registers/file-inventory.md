@@ -1,7 +1,7 @@
 
 # RECON X - File Inventory
 
-**Last Updated:** 24 November 2026
+**Last Updated:** 26 November 2026
 
 ## Root Structure
 
@@ -355,3 +355,25 @@ backend/tests/test_header_mapping.py	Header mapping, source-specific aliases, am
 - No new environment variables were introduced.
 - Review decisions and audit writes participate in the same transaction.
 - Focused Chapter 31 tests: 22 passed.
+
+## Chapter 32 Additions ? LLM Gateway
+
+| Path | Purpose | Chapter | Status |
+|---|---|---:|---|
+| backend/app/llm/__init__.py | LLM package exports | 32 | Implemented |
+| backend/app/llm/exceptions.py | Provider error types | 32 | Implemented |
+| backend/app/llm/gateway.py | Provider orchestration, timeout and fallback | 32 | Implemented |
+| backend/app/llm/schemas.py | LLM request, response and usage schemas | 32 | Implemented |
+| backend/app/llm/usage.py | Usage persistence | 32 | Implemented |
+| backend/app/llm/providers/__init__.py | Provider exports | 32 | Implemented |
+| backend/app/llm/providers/base.py | Provider interface | 32 | Implemented |
+| backend/app/llm/providers/gemini.py | Gemini adapter | 32 | Implemented |
+| backend/app/llm/providers/local.py | Local adapter | 32 | Implemented |
+| backend/app/llm/providers/mock.py | Mock adapter | 32 | Implemented |
+| backend/app/llm/providers/openai_compatible.py | OpenAI-compatible adapter | 32 | Implemented |
+| backend/tests/test_llm_gateway.py | Gateway tests | 32 | Implemented |
+| backend/tests/test_llm_usage.py | Usage tests | 32 | Implemented |
+| backend/app/core/config.py | LLM configuration | 32 | Modified |
+| backend/.env.example | Safe LLM configuration template | 32 | Modified |
+| backend/pyproject.toml | HTTPX runtime dependency | 32 | Modified |
+| backend/tests/test_models.py | Approval fixture update | 32 | Modified |

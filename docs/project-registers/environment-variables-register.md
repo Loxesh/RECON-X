@@ -1,7 +1,7 @@
 
 # RECON X - Environment Variables Register
 
-**Last Updated:** 19 November 2026
+**Last Updated:** 26 November 2026
 
 ## Current Status
 
@@ -86,3 +86,20 @@ Authentication, JWT configuration, request middleware, private S3-compatible obj
 - No new environment variables were introduced.
 - Existing matching ruleset configuration is reused.
 - No fixed company-specific financial discrepancy threshold was added.
+
+## Chapter 32 ? LLM Environment Variables
+
+| Variable | Required when | Secret? | Default / safe example |
+|---|---|---|---|
+| LLM_PROVIDER | Selecting primary provider | No | mock |
+| LLM_FALLBACK_PROVIDERS | Configuring fallbacks | No | Empty |
+| LLM_TIMEOUT_SECONDS | Provider timeout | No | 20 |
+| GEMINI_API_KEY | Gemini enabled | Yes | Unset |
+| GEMINI_MODEL | Gemini enabled | No | gemini-2.5-flash |
+| OPENAI_COMPAT_API_KEY | Remote compatible provider | Yes | Unset |
+| OPENAI_COMPAT_BASE_URL | Remote compatible provider | No | https://api.openai.com/v1 |
+| OPENAI_COMPAT_MODEL | Remote compatible provider | No | gpt-4o-mini |
+| LOCAL_LLM_BASE_URL | Local provider | No | http://localhost:11434/v1 |
+| LOCAL_LLM_MODEL | Local provider | No | llama3.2:3b |
+
+Real credentials remain only in the ignored local .env file.

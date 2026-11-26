@@ -317,3 +317,11 @@ These API groups remain planned for subsequent implementation chapters:
 - HTTP 409: Conflicting idempotency key or unavailable review state.
 - HTTP 422: Invalid decision payload.
 - HTTP 503: Transaction or audit persistence failure.
+
+## Chapter 32 ? LLM Gateway Contract
+
+- No HTTP endpoint introduced by Chapter 32.
+- The LLM gateway is an internal application service.
+- Provider adapters: Gemini, OpenAI-compatible, Mock and local.
+- Provider credentials and endpoints are configured server-side.
+- Secrets must not be exposed through API responses or logs.

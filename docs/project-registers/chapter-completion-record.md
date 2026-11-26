@@ -735,3 +735,18 @@
 - Focused verification: 22 tests passed.
 - Environment variables: no additions.
 - Git checkpoint: pending.
+
+## Chapter 32 ? LLM Gateway and Provider Adapters
+
+**Implementation status:** Implemented and verified; Git milestone pending.
+
+- Implemented provider-neutral LLM gateway.
+- Added Gemini, OpenAI-compatible, Mock and local provider adapters.
+- Added timeout and bounded fallback handling.
+- Added provider error handling and usage recording.
+- Added provider configuration and HTTPX runtime dependency.
+- Focused Chapter 32 tests: 60 passed.
+- Full backend tests: 393 passed, repeated successfully.
+- One non-blocking Starlette/httpx deprecation warning.
+- No HTTP endpoint introduced.
+- Official completion count remains 31/52 until Git closure.

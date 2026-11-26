@@ -167,6 +167,8 @@ SAMPLE_DOCUMENTS = {
         "reviewer_id": "USER001",
         "reviewer_role": "FINANCE_MANAGER",
         "decided_at": NOW,
+        "idempotency_key": "IDEMPOTENCY001",
+        "request_fingerprint": "a" * 64,
     },
 
     AuditEventDocument: {

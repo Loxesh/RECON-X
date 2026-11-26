@@ -72,12 +72,38 @@ class Settings(BaseSettings):
         le=3600,
     )
 
+    # LLM gateway
+    llm_provider: str = "mock"
+    llm_fallback_providers: str = ""
+    llm_timeout_seconds: float = Field(default=20.0, gt=0, le=120)
+
+    # Gemini
+    gemini_api_key: SecretStr | None = None
+    gemini_model: str = "gemini-2.5-flash"
+
+    # OpenAI-compatible provider (e.g. Groq or OpenAI)
+    openai_compat_api_key: SecretStr | None = None
+    openai_compat_base_url: str = "https://api.openai.com/v1"
+    openai_compat_model: str = "gpt-4o-mini"
+
+    # Local OpenAI-compatible endpoint
+    local_llm_base_url: str = "http://localhost:11434/v1"
+    local_llm_model: str = "llama3.2:3b"
+
     @property
     def cors_origin_list(self) -> list[str]:
         return [
             origin.strip()
             for origin in self.cors_origins.split(",")
             if origin.strip()
+        ]
+
+    @property
+    def llm_fallback_provider_list(self) -> list[str]:
+        return [
+            provider.strip().lower()
+            for provider in self.llm_fallback_providers.split(",")
+            if provider.strip()
         ]
 
 

@@ -224,3 +224,17 @@ Do not mark a chapter complete until implementation, verification, documentation
 - Preserve previous project history in documentation.
 - Update registers at chapter milestones, not after every small modification.
 - Comprehensive testing is planned after all 52 chapters are implemented.
+
+## Chapter 32 ? LLM Gateway and Provider Adapters
+
+**Implementation status:** Implemented and verified; Git milestone pending.
+
+- Chapter 32 of 52 ? Phase 5, Governance and AI foundations.
+- Implemented provider-neutral gateway and Gemini, OpenAI-compatible, Mock and local adapters.
+- Added timeout, bounded fallback and provider error handling.
+- Added usage recording support and LLM configuration.
+- Focused tests: 60 passed.
+- Full backend suite: 393 passed twice.
+- No HTTP endpoint introduced.
+- Environment settings recorded in the environment-variable register.
+- Official completed count remains 31/52 until Git closure.
