@@ -134,13 +134,15 @@ Validation, permissions, evidence checks and human review remain mandatory safeg
 
 Total workbook chapters: 52.
 
-Officially completed: 30/52.
+Officially completed: 32/52.
 
 - Chapters 1-9 and 11-29: Completed.
 - Chapter 10: Deferred.
 - Chapter 30: Completed; implementation, documentation, 362 full-suite tests passed, and commit a7288a9 pushed to origin/main.
 - Chapter 31: Implementation and focused verification complete; 22 tests passed. Documentation and Git closure pending.
-- Chapters 32-52: Pending implementation.
+- Chapter 32: Completed; implementation and Git milestone pushed to origin/main.
+- Chapter 33: Prompt registry and structured-output validation implemented and tested; persistence enforcement deferred until the investigation workflow exists. Git checkpoint pending.
+- Chapters 34-52: Pending implementation.
 
 Chapter 30 verification:
 - Audit-chain focused tests: 4 passed.
@@ -237,4 +239,18 @@ Do not mark a chapter complete until implementation, verification, documentation
 - Full backend suite: 393 passed twice.
 - No HTTP endpoint introduced.
 - Environment settings recorded in the environment-variable register.
-- Official completed count remains 31/52 until Git closure.
+- Official completed count: 32/52. Chapter 32 commit `08ddcdf` is pushed to origin/main.
+
+## Chapter 33 - Prompt Registry and Structured Output
+
+**Implementation status:** Implementation and verification complete; documentation and Git closure pending.
+
+- Workbook: Stage 2, page 46, Phase 5 - Governance and AI foundations.
+- Implemented versioned prompt registration and rendering.
+- Implemented strict structured JSON output validation with Pydantic.
+- Evidence record references must be members of the supplied evidence IDs.
+- Malformed JSON, missing fields, extra fields, invented IDs and overlong output are rejected.
+- Focused tests: 15 passed.
+- Full backend suite: 408 passed, 1 existing Starlette/httpx deprecation warning.
+- No HTTP endpoints or environment variables introduced.
+- Output validation does not independently prove natural-language factual truth; Human in the Loop remains mandatory.

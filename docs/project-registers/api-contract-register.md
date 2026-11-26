@@ -325,3 +325,13 @@ These API groups remain planned for subsequent implementation chapters:
 - Provider adapters: Gemini, OpenAI-compatible, Mock and local.
 - Provider credentials and endpoints are configured server-side.
 - Secrets must not be exposed through API responses or logs.
+
+## Chapter 33 - Prompt Registry and Structured Output
+
+- No HTTP endpoints introduced.
+- Prompt registry and output validation are internal application components.
+- Structured output is validated against strict Pydantic schemas before it can be accepted.
+- Evidence record IDs must belong to the evidence supplied for the request.
+- Invalid JSON, missing or unexpected fields, unsupported evidence IDs and overlong outputs are rejected.
+- No public API contract or response schema was added by this chapter.
+- Human review remains separate; validated LLM output does not authorise or approve financial decisions.

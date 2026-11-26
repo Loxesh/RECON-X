@@ -103,3 +103,10 @@ Authentication, JWT configuration, request middleware, private S3-compatible obj
 | LOCAL_LLM_MODEL | Local provider | No | llama3.2:3b |
 
 Real credentials remain only in the ignored local .env file.
+
+## Chapter 33 - Configuration
+
+- No new environment variables introduced.
+- Chapter 33 uses the existing Chapter 32 LLM provider configuration.
+- Prompt templates and output validation limits are defined in application code.
+- No credentials or provider settings are added by this chapter.

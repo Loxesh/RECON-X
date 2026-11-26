@@ -377,3 +377,15 @@ backend/tests/test_header_mapping.py	Header mapping, source-specific aliases, am
 | backend/.env.example | Safe LLM configuration template | 32 | Modified |
 | backend/pyproject.toml | HTTPX runtime dependency | 32 | Modified |
 | backend/tests/test_models.py | Approval fixture update | 32 | Modified |
+
+## Chapter 33 Additions - Prompt Registry and Structured Output
+
+| File | Purpose |
+|---|---|
+| `backend/app/llm/prompt_registry.py` | Versioned prompt registration, lookup and validated template rendering |
+| `backend/app/guardrails/__init__.py` | Guardrail package exports |
+| `backend/app/guardrails/output_guards.py` | Strict Pydantic JSON output validation, bounded output and supplied-evidence ID checks |
+| `backend/tests/test_llm_structured_output.py` | Prompt registry and structured-output validation tests |
+
+- No new API endpoints, database collections or environment variables were introduced.
+- Chapter 33 does not implement Chapter 34 input or prompt-injection guardrails.

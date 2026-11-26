@@ -38,7 +38,8 @@
 | 29 | Reconciliation status and full engine integration | Integrated independent bank-ledger and gateway-ledger tracks, matching cascade, residual classification and consolidated status calculations; 10 focused tests and 358 full-suite tests passed; Git milestone committed and pushed in e122983 | Completed |
 | 30 | Audit event model and hash-chain writer | Implemented append-only tenant audit chain; 362 full-suite tests passed; commit a7288a9 pushed | Completed |
 | 31 | Human approval workflow | Implemented review queue, evidence view, approve/modify/reject decisions, permission enforcement, transactional audit and idempotency; 22 focused tests passed; documentation and Git closure pending | Implementation Verified |
-| 32-33 | Governance and AI foundations | Pending implementation and verification | Not Started |
+| 32 | LLM gateway and provider adapters | Implemented and verified; commit 08ddcdf pushed to origin/main | Completed |
+| 33 | Prompt registry and structured output | Implementation and tests verified; persistence enforcement deferred until investigation workflow exists | Implementation Verified - Integration Deferred |
 | 34-39 | Agents and orchestration | Pending implementation and verification | Not Started |
 | 40-42 | Workers and reporting | Pending implementation and verification | Not Started |
 | 43-46 | Frontend | Pending implementation and verification | Not Started |
@@ -750,3 +751,20 @@
 - One non-blocking Starlette/httpx deprecation warning.
 - No HTTP endpoint introduced.
 - Official completion count remains 31/52 until Git closure.
+
+## Chapter 33 Verification
+
+### Prompt Registry and Structured Output
+
+- Implemented `backend/app/llm/prompt_registry.py` with versioned prompt registration, lookup and rendering.
+- Implemented `backend/app/guardrails/output_guards.py` with strict Pydantic structured-output validation.
+- Added `backend/app/guardrails/__init__.py` for guardrail package exports.
+- Added `backend/tests/test_llm_structured_output.py`.
+- Validates JSON structure, required fields, unexpected fields, output length and evidence record ID membership.
+- Rejects malformed JSON, missing fields, invented evidence IDs and invalid claim/citation relationships.
+- Evidence ID validation confirms that referenced IDs belong to supplied evidence; it does not independently establish the factual truth of generated prose.
+- Human review remains required under the approved Human in the Loop architecture.
+- Focused Chapter 33 tests: 15 passed.
+- Full backend test suite: 408 passed, 1 existing Starlette/httpx deprecation warning.
+- No HTTP endpoints or environment variables introduced.
+- Documentation updated; Git checkpoint pending. Persistence enforcement will be integrated and verified with the investigation workflow.
