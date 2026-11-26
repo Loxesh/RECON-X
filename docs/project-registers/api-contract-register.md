@@ -1,7 +1,7 @@
 
 # RECON X - API Contract Register
 
-**Last Updated:** 19 November 2026
+**Last Updated:** 26 November 2026
 
 ## Implemented Endpoints
 
@@ -13,6 +13,9 @@
 | GET | /api/v1/auth/me | Retrieve the authenticated user's information | Implemented |
 | POST | /api/v1/uploads | Validate, privately store and register a financial source file and enqueue ingestion | Implemented |
 | GET | /api/v1/uploads/{file_id}/status | Retrieve tenant-scoped ingestion job status and row counts | Implemented |
+| GET | /api/v1/reviews | Retrieve the tenant-scoped human review queue | Implemented |
+| GET | /api/v1/reviews/{exception_id} | Retrieve review detail and evidence data | Implemented |
+| POST | /api/v1/reviews/{exception_id}/decision | Submit an idempotent human approval decision | Implemented |
 
 ## 1. API Health Endpoint
 
@@ -200,6 +203,7 @@ The following Pydantic API schemas are available under `backend/app/schemas/`.
 | exception.py | ExceptionResponse, ExceptionListFilters, ExceptionAssignmentRequest, ExceptionStatusUpdateRequest | Exception review and assignment contracts |
 | investigation.py | InvestigationResponse, InvestigationRequest, InvestigationListFilters | Investigation request and response contracts |
 | report.py | ReportResponse, ReportGenerationRequest, ReportListFilters, ReportSignoffSchema | Report generation, retrieval and sign-off contracts |
+| review.py | ReviewDecisionRequest, ReviewQueueItem, ReviewDetailResponse, ReviewDecisionResponse | Human review queue, evidence detail and decision contracts |
 
 ## 8. API Contract Rules
 
@@ -223,7 +227,6 @@ These API groups remain planned for subsequent implementation chapters:
 - Transactions and matches
 - Exceptions
 - Investigations
-- Human review
 - Reports
 - Administration
 
@@ -252,3 +255,65 @@ These API groups remain planned for subsequent implementation chapters:
 - Discrepancy detection and exception classification are internal reconciliation modules.
 - No HTTP endpoint or externally exposed API contract was introduced.
 - Existing exception document and response schema contracts were preserved.
+
+## 10. Human Review API
+
+### Review Queue
+
+- **Method:** GET
+- **Path:** `/api/v1/reviews`
+- **Authentication:** Requires a valid JWT access token.
+- **Permission:** `reviews:read`
+- **Purpose:** Retrieves the authenticated organisation's pending review items.
+- **Tenant isolation:** Results are scoped to the authenticated organisation.
+- **Pagination:** Supports `skip` and `limit`.
+
+### Review Detail and Evidence
+
+- **Method:** GET
+- **Path:** `/api/v1/reviews/{exception_id}`
+- **Authentication:** Requires a valid JWT access token.
+- **Permission:** `reviews:read`
+- **Purpose:** Retrieves review details, transaction references, risk information and evidence.
+- **Tenant isolation:** An exception belonging to another organisation is not exposed.
+
+### Submit a Review Decision
+
+- **Method:** POST
+- **Path:** `/api/v1/reviews/{exception_id}/decision`
+- **Authentication:** Requires a valid JWT access token.
+- **Permission:** `reviews:decide`
+- **Required Header:** `Idempotency-Key`
+- **Request Schema:** `ReviewDecisionRequest`
+- **Response Schema:** `ReviewDecisionResponse`
+
+#### Request Fields
+
+| Field | Required | Description |
+|---|---|---|
+| decision | Yes | APPROVE, MODIFY or REJECT |
+| comment | No | Reviewer comment, maximum 4000 characters |
+| after | Conditional | Non-empty proposal required for MODIFY |
+
+#### Decision Behaviour
+
+- **APPROVE:** Sets exception status to `APPROVED` and clears `review_required`.
+- **REJECT:** Sets exception status to `REJECTED` and clears `review_required`.
+- **MODIFY:** Stores the proposed changes in the approval record; exception remains `OPEN` and `review_required`.
+- Modification proposals do not directly overwrite protected financial fields.
+- Terminal status transitions append to `status_history`.
+- Approval persistence, exception updates and audit append execute in one MongoDB transaction.
+- Identical idempotent retries replay the original decision.
+- Reusing an idempotency key with a different request returns HTTP 409.
+- Invalid state transitions and simultaneous conflicting decisions are rejected.
+
+#### Permission and Error Behaviour
+
+- `org_admin` and `finance_analyst` are authorised decision roles.
+- `auditor` is read-only and cannot submit decisions.
+- HTTP 401: Missing or invalid authentication.
+- HTTP 403: Missing decision permission.
+- HTTP 404: Review item not found within the tenant.
+- HTTP 409: Conflicting idempotency key or unavailable review state.
+- HTTP 422: Invalid decision payload.
+- HTTP 503: Transaction or audit persistence failure.

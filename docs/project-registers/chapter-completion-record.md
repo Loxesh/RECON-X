@@ -1,7 +1,7 @@
 
 # RECON X - Chapter Completion Record
 
-**Last Updated:** 24 November 2026
+**Last Updated:** 26 November 2026
 
 ## Chapter Progress Summary
 
@@ -36,7 +36,9 @@
 | 27 | Duplicate and missing detection | Implemented deterministic duplicate fingerprints and source-presence classification; 15 focused tests passed; Git checkpoint recorded as c7369e0 | Completed |
 | 28 | Discrepancy detection and exception classification | Implemented discrepancy evidence generation and exception classification; 22 focused tests passed; Git milestone committed and pushed in e122983 | Completed |
 | 29 | Reconciliation status and full engine integration | Integrated independent bank-ledger and gateway-ledger tracks, matching cascade, residual classification and consolidated status calculations; 10 focused tests and 358 full-suite tests passed; Git milestone committed and pushed in e122983 | Completed |
-| 30-33 | Governance and AI | Pending implementation and verification | Not Started |
+| 30 | Audit event model and hash-chain writer | Implemented append-only tenant audit chain; 362 full-suite tests passed; commit a7288a9 pushed | Completed |
+| 31 | Human approval workflow | Implemented review queue, evidence view, approve/modify/reject decisions, permission enforcement, transactional audit and idempotency; 22 focused tests passed; documentation and Git closure pending | Implementation Verified |
+| 32-33 | Governance and AI foundations | Pending implementation and verification | Not Started |
 | 34-39 | Agents and orchestration | Pending implementation and verification | Not Started |
 | 40-42 | Workers and reporting | Pending implementation and verification | Not Started |
 | 43-46 | Frontend | Pending implementation and verification | Not Started |
@@ -326,8 +328,8 @@
 | Chapter 14 authentication | `06ee6c6` |
 | Chapter 15 RBAC | `ff257fe` |
 | Chapter 16 API infrastructure | `effc53c` |
-| Chapters 18â€“19 implementation | `2a40573` |
-| Chapters 18â€“19 documentation closure | `5cec76f` |
+| Chapters 18Ã¢â‚¬â€œ19 implementation | `2a40573` |
+| Chapters 18Ã¢â‚¬â€œ19 documentation closure | `5cec76f` |
 | Chapter 20 implementation and verification | `24eca0b` |
 
 ## Chapter 20 Verification
@@ -446,14 +448,14 @@
 
 ---
 
-## Chapter 23 Verification â€” Matching Data Contracts and Ruleset Configuration
+## Chapter 23 Verification Ã¢â‚¬â€ Matching Data Contracts and Ruleset Configuration
 
 - Created `backend/app/reconciliation/` package.
 - Implemented immutable matching transaction and pair input schemas.
 - Implemented matching outcome, rule identifier, evidence and result schemas.
 - Implemented configurable matching ruleset with the approved starting defaults:
-  - Bank-ledger date window: Â±2 days.
-  - Gateway-ledger date window: Â±3 days.
+  - Bank-ledger date window: Ã‚Â±2 days.
+  - Gateway-ledger date window: Ã‚Â±3 days.
   - Auto-confirm amount tolerance: 0.00.
   - Suggested amount tolerance: 1.00.
   - Fuzzy matching threshold: 0.85.
@@ -522,7 +524,7 @@
 
 **Chapter 24 implementation, verification, documentation and Git checkpoints are complete.**
 
-## Chapter 25 Verification â€“ Fuzzy Candidate Matching
+## Chapter 25 Verification Ã¢â‚¬â€œ Fuzzy Candidate Matching
 
 ### Implementation
 
@@ -531,7 +533,7 @@
 - Added configurable fuzzy similarity threshold from the matching ruleset.
 - Enforced configured suggested amount tolerance.
 - Enforced source-specific transaction date windows.
-- Restricted supported cross-source pairs to BANKâ€“LEDGER and GATEWAYâ€“LEDGER.
+- Restricted supported cross-source pairs to BANKÃ¢â‚¬â€œLEDGER and GATEWAYÃ¢â‚¬â€œLEDGER.
 - Enforced currency equality, unique transaction IDs and UTC-aware dates.
 - Implemented deterministic candidate ordering.
 - Implemented AMBIGUOUS outcomes for tied highest-scoring candidates.
@@ -555,13 +557,13 @@
 - Git implementation and documentation milestone: Commit `066e5df`, pushed to origin/main.
 
 **Chapter 25 implementation, verification, documentation and Git milestone are complete.**
-## Chapter 26 Verification â€“ Aggregate and One-to-Many Matching
+## Chapter 26 Verification Ã¢â‚¬â€œ Aggregate and One-to-Many Matching
 
 ### Implementation
 
 - Created `backend/app/reconciliation/aggregate_match.py`.
 - Implemented explicit one-to-many and many-to-one candidate group evaluation.
-- Enforced supported BANKâ€“LEDGER and GATEWAYâ€“LEDGER source pairs.
+- Enforced supported BANKÃ¢â‚¬â€œLEDGER and GATEWAYÃ¢â‚¬â€œLEDGER source pairs.
 - Enforced unique transaction IDs and consistent source types within grouped transactions.
 - Enforced currency equality and configured date windows.
 - Calculated aggregate totals using exact Decimal arithmetic.
@@ -587,7 +589,7 @@
 
 **Chapter 26 implementation, verification, documentation and Git milestone are complete.**
 
-## Chapter 27 Verification — Duplicate and Missing Detection
+## Chapter 27 Verification â€” Duplicate and Missing Detection
 
 ### Implementation
 
@@ -597,7 +599,7 @@
 - Implemented DUPLICATE and REFERENCE_CONFLICT classifications.
 - Duplicate detection flags records and never deletes transactions.
 - Created `backend/app/reconciliation/missing_detector.py`.
-- Implemented source-presence comparison for BANK–LEDGER and GATEWAY–LEDGER.
+- Implemented source-presence comparison for BANKâ€“LEDGER and GATEWAYâ€“LEDGER.
 - Implemented MISSING_FROM_BANK, MISSING_FROM_LEDGER and MISSING_FROM_GATEWAY classifications.
 - Included transaction identifiers and source information in evidence.
 - Implemented deterministic result ordering.
@@ -619,7 +621,7 @@
 - Documentation update: Completed.
 - Git implementation and documentation milestone: Commit c7369e0, pushed to origin/main.
 
-## Chapter 28 Verification — Discrepancy Detection and Exception Classification
+## Chapter 28 Verification â€” Discrepancy Detection and Exception Classification
 
 ### Implementation
 
@@ -712,3 +714,24 @@
 - Documentation update: Completed.
 - Git implementation and documentation milestone: Committed and pushed as a7288a9 to origin/main.
 - Official chapter completion: Completed.
+
+---
+
+## Chapter 31 Verification - Human Approval Workflow
+
+**Status:** Implementation verified; documentation and Git closure pending.
+
+- Implemented the tenant-scoped human review queue and review detail service.
+- Implemented approval decision validation and stable request fingerprinting.
+- Added APPROVE, MODIFY and REJECT decision handling.
+- MODIFY stores the proposal in the immutable approval record and keeps the exception OPEN and review-required.
+- APPROVE and REJECT perform the corresponding terminal status transition.
+- Added reviewer permission enforcement for `reviews:decide`; read access uses `reviews:read`.
+- Added idempotency handling and conflicting-key detection.
+- Integrated exception updates, approval persistence and audit append in one MongoDB transaction.
+- Added status history for terminal status transitions.
+- Added the unique tenant/exception/idempotency index.
+- Added review API and service tests.
+- Focused verification: 22 tests passed.
+- Environment variables: no additions.
+- Git checkpoint: pending.

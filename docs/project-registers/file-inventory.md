@@ -273,7 +273,7 @@ backend/tests/test_header_mapping.py	Header mapping, source-specific aliases, am
 | backend/app/reconciliation/exact_match.py | Deterministic exact transaction ID and normalized reference matching with UTC date validation, currency, Decimal amount, configured date-window and evidence validation |
 | backend/tests/test_exact_match.py | Exact matching tests covering transaction IDs, references, date windows, amounts, currencies, ruleset identity, deterministic results and UTC validation |
 
-## Chapter 25â€“26 Additions â€“ Reconciliation Matching
+## Chapter 25Ã¢â‚¬â€œ26 Additions Ã¢â‚¬â€œ Reconciliation Matching
 
 | File | Purpose |
 |---|---|
@@ -295,7 +295,7 @@ backend/tests/test_header_mapping.py	Header mapping, source-specific aliases, am
 
 - `backend/pyproject.toml`: Added RapidFuzz runtime dependency (`rapidfuzz>=3.9,<4.0`).
 
-### Chapter 25â€“26 Notes
+### Chapter 25Ã¢â‚¬â€œ26 Notes
 
 - Fuzzy and aggregate matching produce suggestions, not automatic financial confirmations.
 - Aggregate matching evaluates explicitly supplied candidate groups; it does not generate all possible combinations.
@@ -328,3 +328,30 @@ backend/tests/test_header_mapping.py	Header mapping, source-specific aliases, am
 - Reuses the existing `audit_events` MongoDB collection and indexes.
 - No new API endpoints, collections or environment variables were introduced.
 - Full backend suite after Chapter 30: 362 passed, 1 warning.
+
+## Chapter 31 Additions - Human Approval Workflow
+
+| File | Purpose |
+|---|---|
+| `backend/app/models/approval.py` | Immutable human approval decision document |
+| `backend/app/governance/approval_workflow.py` | Decision validation and request fingerprinting |
+| `backend/app/schemas/review.py` | Review queue, detail and decision API schemas |
+| `backend/app/services/review_service.py` | Tenant-scoped transactional review and approval service |
+| `backend/app/api/v1/routers/reviews.py` | Human review API endpoints |
+| `backend/tests/test_reviews.py` | Approval workflow, transaction, concurrency and idempotency tests |
+| `backend/tests/test_review_api.py` | Review API authentication, permission and validation tests |
+
+### Modified Existing Files
+
+| File | Change |
+|---|---|
+| `backend/app/api/v1/router.py` | Registered the reviews router |
+| `backend/app/governance/audit_logger.py` | Added transaction-session support for audit writes |
+| `backend/app/governance/audit_repository.py` | Added caller-session support for atomic audit append |
+| `backend/scripts/create_indexes.py` | Added the unique approval idempotency index |
+
+- Reuses the existing MongoDB database and audit collection.
+- Adds the `approvals` collection through the approval workflow.
+- No new environment variables were introduced.
+- Review decisions and audit writes participate in the same transaction.
+- Focused Chapter 31 tests: 22 passed.

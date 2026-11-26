@@ -1,4 +1,3 @@
-
 """Transactional, append-only, tenant-scoped audit event repository."""
 
 from __future__ import annotations
@@ -205,7 +204,6 @@ class AuditRepository:
         if not isinstance(data["ts"], datetime):
             raise TypeError("Audit timestamp must be a datetime.")
 
-        # Normalize BEFORE calculating the hash and storing the document.
         data["ts"] = self._bson_datetime(data["ts"])
 
         if not isinstance(data["actor"], dict):
@@ -221,63 +219,93 @@ class AuditRepository:
 
         return data
 
-    def append(self, event: dict[str, Any]) -> dict[str, Any]:
-        """Atomically allocate a sequence and append a hash-chained event."""
+    def _append_in_transaction(
+        self,
+        data: dict[str, Any],
+        session: Any,
+    ) -> dict[str, Any]:
+        """Append an event using a transaction owned by the caller."""
+
+        latest = self.collection.find_one(
+            {"org_id": self.org_id},
+            sort=[("seq", DESCENDING)],
+            session=session,
+        )
+
+        sequence = (
+            latest["seq"] + 1
+            if latest is not None
+            else 1
+        )
+
+        previous_hash = (
+            latest["hash"]
+            if latest is not None
+            else None
+        )
+
+        created_at = self._bson_datetime(
+            datetime.now(timezone.utc)
+        )
+
+        document = {
+            **data,
+            "org_id": self.org_id,
+            "seq": sequence,
+            "prev_hash": previous_hash,
+            "created_at": created_at,
+            "updated_at": created_at,
+            "schema_version": 1,
+        }
+
+        document["hash"] = self.calculate_hash(document)
+
+        persisted = to_bson_value(document)
+
+        result = self.collection.insert_one(
+            persisted,
+            session=session,
+        )
+
+        persisted["_id"] = result.inserted_id
+
+        return persisted
+
+    def append(
+        self,
+        event: dict[str, Any],
+        *,
+        session: Any | None = None,
+    ) -> dict[str, Any]:
+        """
+        Append one audit event.
+
+        When session is supplied, the caller owns the transaction.
+        When omitted, this method creates and owns its transaction.
+        """
 
         data = self._validate_input(event)
+
+        if session is not None:
+            try:
+                return self._append_in_transaction(data, session)
+            except PyMongoError as exc:
+                raise AuditChainError(
+                    "MongoDB audit append failed inside the supplied transaction."
+                ) from exc
+
         client = self.database.client
 
         for attempt in range(self.MAX_APPEND_ATTEMPTS):
             try:
-                with client.start_session() as session:
-
-                    def transaction_body(active_session):
-                        latest = self.collection.find_one(
-                            {"org_id": self.org_id},
-                            sort=[("seq", DESCENDING)],
-                            session=active_session,
-                        )
-
-                        sequence = (
-                            latest["seq"] + 1
-                            if latest is not None
-                            else 1
-                        )
-
-                        previous_hash = (
-                            latest["hash"]
-                            if latest is not None
-                            else None
-                        )
-
-                        created_at = self._bson_datetime(
-                            datetime.now(timezone.utc)
-                        )
-
-                        document = {
-                            **data,
-                            "org_id": self.org_id,
-                            "seq": sequence,
-                            "prev_hash": previous_hash,
-                            "created_at": created_at,
-                            "updated_at": created_at,
-                            "schema_version": 1,
-                        }
-
-                        document["hash"] = self.calculate_hash(document)
-
-                        persisted = to_bson_value(document)
-
-                        result = self.collection.insert_one(
-                            persisted,
-                            session=active_session,
-                        )
-
-                        persisted["_id"] = result.inserted_id
-
-                        return persisted
-
-                    return session.with_transaction(transaction_body)
+                with client.start_session() as active_session:
+                    return active_session.with_transaction(
+                        lambda transaction_session:
+                            self._append_in_transaction(
+                                data,
+                                transaction_session,
+                            )
+                    )
 
             except DuplicateKeyError as exc:
                 if attempt == self.MAX_APPEND_ATTEMPTS - 1:

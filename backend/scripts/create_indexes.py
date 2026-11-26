@@ -17,8 +17,10 @@ INDEX_DEFINITIONS = {
         ([("slug", 1)], {"name": "uq_organizations_slug", "unique": True}),
     ],
     "users": [
-        ([("org_id", 1), ("email", 1)],
-         {"name": "uq_users_org_email", "unique": True}),
+        (
+            [("org_id", 1), ("email", 1)],
+            {"name": "uq_users_org_email", "unique": True},
+        ),
         (
             [("org_id", 1), ("external_subject", 1)],
             {
@@ -99,20 +101,32 @@ INDEX_DEFINITIONS = {
         ),
     ],
     "match_results": [
-        ([("org_id", 1), ("job_id", 1), ("status", 1)],
-         {"name": "ix_match_results_org_job_status"}),
-        ([("org_id", 1), ("side_a_ids", 1)],
-         {"name": "ix_match_results_org_side_a"}),
-        ([("org_id", 1), ("side_b_ids", 1)],
-         {"name": "ix_match_results_org_side_b"}),
+        (
+            [("org_id", 1), ("job_id", 1), ("status", 1)],
+            {"name": "ix_match_results_org_job_status"},
+        ),
+        (
+            [("org_id", 1), ("side_a_ids", 1)],
+            {"name": "ix_match_results_org_side_a"},
+        ),
+        (
+            [("org_id", 1), ("side_b_ids", 1)],
+            {"name": "ix_match_results_org_side_b"},
+        ),
     ],
     "exceptions": [
-        ([("org_id", 1), ("job_id", 1), ("status", 1)],
-         {"name": "ix_exceptions_org_job_status"}),
-        ([("org_id", 1), ("type", 1), ("created_at", -1)],
-         {"name": "ix_exceptions_org_type_created"}),
-        ([("org_id", 1), ("summary", "text")],
-         {"name": "tx_exceptions_org_summary"}),
+        (
+            [("org_id", 1), ("job_id", 1), ("status", 1)],
+            {"name": "ix_exceptions_org_job_status"},
+        ),
+        (
+            [("org_id", 1), ("type", 1), ("created_at", -1)],
+            {"name": "ix_exceptions_org_type_created"},
+        ),
+        (
+            [("org_id", 1), ("summary", "text")],
+            {"name": "tx_exceptions_org_summary"},
+        ),
     ],
     "investigations": [
         (
@@ -137,6 +151,16 @@ INDEX_DEFINITIONS = {
             [("org_id", 1), ("exception_id", 1), ("decided_at", -1)],
             {"name": "ix_approvals_org_exception_decided"},
         ),
+        (
+            [("org_id", 1), ("exception_id", 1), ("idempotency_key", 1)],
+            {
+                "name": "uq_approvals_org_exception_idempotency",
+                "unique": True,
+                "partialFilterExpression": {
+                    "idempotency_key": {"$type": "string"}
+                },
+            },
+        ),
     ],
     "audit_events": [
         (
@@ -155,10 +179,14 @@ INDEX_DEFINITIONS = {
         ),
     ],
     "llm_usage": [
-        ([("org_id", 1), ("job_id", 1)],
-         {"name": "ix_llm_usage_org_job"}),
-        ([("org_id", 1), ("ts", -1)],
-         {"name": "ix_llm_usage_org_ts"}),
+        (
+            [("org_id", 1), ("job_id", 1)],
+            {"name": "ix_llm_usage_org_job"},
+        ),
+        (
+            [("org_id", 1), ("ts", -1)],
+            {"name": "ix_llm_usage_org_ts"},
+        ),
     ],
 }
 

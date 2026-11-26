@@ -1,7 +1,7 @@
 
-# RECON X – Project Context
+# RECON X â€“ Project Context
 
-**Last Updated:** 24 November 2026
+**Last Updated:** 26 November 2026
 
 ## 1. Project Overview
 
@@ -122,13 +122,13 @@ Validation, permissions, evidence checks and human review remain mandatory safeg
 
 ## 7. Repository Structure
 
-- `backend/` – FastAPI application and backend modules.
-- `frontend/` – React application.
-- `docker/` – Local service configuration.
-- `scripts/` – Utility scripts.
-- `sample_data/` – Development sample data.
-- `docs/` – Architecture, operations and project registers.
-- `.github/workflows/` – CI workflow configuration.
+- `backend/` â€“ FastAPI application and backend modules.
+- `frontend/` â€“ React application.
+- `docker/` â€“ Local service configuration.
+- `scripts/` â€“ Utility scripts.
+- `sample_data/` â€“ Development sample data.
+- `docs/` â€“ Architecture, operations and project registers.
+- `.github/workflows/` â€“ CI workflow configuration.
 
 ## 8. Implementation Progress
 
@@ -139,7 +139,8 @@ Officially completed: 30/52.
 - Chapters 1-9 and 11-29: Completed.
 - Chapter 10: Deferred.
 - Chapter 30: Completed; implementation, documentation, 362 full-suite tests passed, and commit a7288a9 pushed to origin/main.
-- Chapters 31-52: Pending implementation.
+- Chapter 31: Implementation and focused verification complete; 22 tests passed. Documentation and Git closure pending.
+- Chapters 32-52: Pending implementation.
 
 Chapter 30 verification:
 - Audit-chain focused tests: 4 passed.
@@ -156,7 +157,24 @@ Earlier chapter focused verification records:
 
 Chapter 30 is complete. The local and origin/main commit hashes match.
 
-## 9. Current Reconciliation Modules
+## 9. Chapter 31 - Human Approval Workflow
+
+**Implementation status:** Verified; Git milestone pending.
+
+- Review queue and tenant-scoped review detail retrieval implemented.
+- Evidence data exposed through the review detail response.
+- Approve, modify and reject decisions implemented.
+- Decision permission is enforced separately from read permission.
+- Auditor access remains read-only.
+- Idempotency keys prevent duplicate decisions and detect conflicting retries.
+- Exception updates, approval records and audit events are committed transactionally.
+- MODIFY stores a proposal without changing protected financial fields or closing the review.
+- Terminal decisions update exception status history.
+- Focused verification: 22 tests passed.
+- No new environment variables introduced.
+- Official completion count remains 30/52 until documentation and Git closure are verified.
+
+## 10. Current Reconciliation Modules
 
 - `backend/app/reconciliation/schemas.py`
 - `backend/app/reconciliation/rules.py`
@@ -178,7 +196,7 @@ Related tests:
 - `backend/tests/test_discrepancy_detector.py`
 - `backend/tests/test_exception_classifier.py`
 
-## 10. Development and Git Workflow
+## 11. Development and Git Workflow
 
 Work chapter by chapter according to the approved workbook and ADRs.
 
@@ -197,7 +215,7 @@ Never commit secrets or force-push without approval.
 
 Do not mark a chapter complete until implementation, verification, documentation and Git checkpoint requirements are satisfied.
 
-## 11. Important Project Rules
+## 12. Important Project Rules
 
 - Preserve the approved architecture and existing functionality.
 - Provide complete replacement code for modified files.

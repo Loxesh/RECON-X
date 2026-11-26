@@ -1,4 +1,3 @@
-
 """Application-facing audit logging service."""
 
 from __future__ import annotations
@@ -26,8 +25,14 @@ class AuditLogger:
         correlation_id: str,
         details: dict[str, Any] | None = None,
         timestamp: datetime | None = None,
+        session: Any | None = None,
     ) -> dict[str, Any]:
-        """Append one immutable audit event."""
+        """
+        Append one immutable audit event.
+
+        An optional MongoDB session allows a business operation and its
+        audit record to be committed or rolled back together.
+        """
 
         event = {
             "ts": timestamp or datetime.now(timezone.utc),
@@ -40,7 +45,10 @@ class AuditLogger:
             "correlation_id": correlation_id,
         }
 
-        return self.repository.append(event)
+        return self.repository.append(
+            event,
+            session=session,
+        )
 
     def verify(self) -> dict[str, Any]:
         """Verify the tenant's complete audit hash chain."""
