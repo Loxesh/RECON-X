@@ -142,7 +142,8 @@ Officially completed: 32/52.
 - Chapter 31: Implementation and focused verification complete; 22 tests passed. Documentation and Git closure pending.
 - Chapter 32: Completed; implementation and Git milestone pushed to origin/main.
 - Chapter 33: Prompt registry and structured-output validation implemented and tested; persistence enforcement deferred until the investigation workflow exists. Git checkpoint pending.
-- Chapters 34-52: Pending implementation.
+- Chapter 34: Input and prompt-injection guardrails implemented and verified; documentation and Git closure pending.
+- Chapters 35-52: Pending implementation.
 
 Chapter 30 verification:
 - Audit-chain focused tests: 4 passed.
@@ -254,3 +255,16 @@ Do not mark a chapter complete until implementation, verification, documentation
 - Full backend suite: 408 passed, 1 existing Starlette/httpx deprecation warning.
 - No HTTP endpoints or environment variables introduced.
 - Output validation does not independently prove natural-language factual truth; Human in the Loop remains mandatory.
+
+## Chapter 34 - Input and Prompt-Injection Guardrails
+
+- Implemented untrusted input validation and serialization.
+- Added deterministic prompt-injection inspection for common attack indicators.
+- Added evidence-reference validation against supplied evidence IDs.
+- Added 32 Chapter 34 tests; 47 focused Chapter 33 and 34 tests passed.
+- Full backend suite: 440 passed, 1 existing Starlette/httpx deprecation warning.
+- No API endpoints, database collections or environment variables were added.
+- Prompt-injection pattern detection is not a guarantee against every attack.
+- Human review remains required; these guardrails do not authorize actions.
+- Documentation updated; Git closure pending.
+- Official completed chapter count remains 32/52 because earlier Chapter 31 and Chapter 33 closure items remain outstanding.

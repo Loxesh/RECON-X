@@ -32,11 +32,23 @@ class OpenAICompatibleProvider(BaseLLMProvider):
         if self.api_key:
             headers["Authorization"] = f"Bearer {self.api_key}"
 
+        messages = []
+
+        if request.system_policy is not None:
+            messages.append(
+                {
+                    "role": "system",
+                    "content": request.system_policy,
+                }
+            )
+
+        messages.extend(
+            item.model_dump() for item in request.messages
+        )
+
         payload = {
             "model": self.model,
-            "messages": [
-                item.model_dump() for item in request.messages
-            ],
+            "messages": messages,
             "temperature": request.temperature,
             "max_tokens": request.max_output_tokens,
         }
@@ -55,7 +67,8 @@ class OpenAICompatibleProvider(BaseLLMProvider):
                 raise ProviderError(
                     self.provider_name,
                     code="http_error",
-                    retryable=response.status_code in (408, 429, 500, 502, 503, 504),
+                    retryable=response.status_code
+                    in (408, 429, 500, 502, 503, 504),
                 )
 
             data = response.json()

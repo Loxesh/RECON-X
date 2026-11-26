@@ -389,3 +389,21 @@ backend/tests/test_header_mapping.py	Header mapping, source-specific aliases, am
 
 - No new API endpoints, database collections or environment variables were introduced.
 - Chapter 33 does not implement Chapter 34 input or prompt-injection guardrails.
+
+## Chapter 34 Additions - Input and Prompt-Injection Guardrails
+
+| File | Purpose |
+|---|---|
+| backend/app/guardrails/input_guards.py | Validates and serializes untrusted external text |
+| backend/app/guardrails/prompt_injection.py | Detects common prompt-injection indicators |
+| backend/app/guardrails/evidence_checker.py | Validates evidence references against supplied IDs |
+| backend/app/guardrails/__init__.py | Exports Chapter 33 and Chapter 34 guardrail components |
+| backend/tests/test_input_guardrails.py | Input, injection and evidence validation tests |
+| backend/app/llm/schemas.py | Separates system policy from ordinary conversation messages |
+| backend/app/llm/providers/gemini.py | Sends system policy separately through Gemini system instructions |
+| backend/app/llm/providers/openai_compatible.py | Sends system policy separately from ordinary conversation messages |
+| backend/tests/test_llm_security_boundary.py | Verifies provider payload separation and absence of tool-execution fields |
+| backend/tests/test_llm_gateway.py | Extended with LLM security-boundary validation tests |
+
+- No new API endpoints, database collections or environment variables were introduced.
+- Prompt-injection detection uses deterministic patterns and does not guarantee detection of every possible attack.

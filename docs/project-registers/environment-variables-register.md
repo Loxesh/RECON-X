@@ -110,3 +110,8 @@ Real credentials remain only in the ignored local .env file.
 - Chapter 33 uses the existing Chapter 32 LLM provider configuration.
 - Prompt templates and output validation limits are defined in application code.
 - No credentials or provider settings are added by this chapter.
+
+## Chapter 34 - Input and Prompt-Injection Guardrails
+
+- No new environment variables were introduced.
+- Existing Chapter 32 LLM configuration remains unchanged.

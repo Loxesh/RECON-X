@@ -23,17 +23,12 @@ class GeminiProvider(BaseLLMProvider):
         self.timeout_seconds = timeout_seconds
 
     async def generate(self, request: LLMRequest) -> LLMResponse:
-        system_messages = [
-            item.content for item in request.messages
-            if item.role == "system"
-        ]
         contents = [
             {
                 "role": "model" if item.role == "assistant" else "user",
                 "parts": [{"text": item.content}],
             }
             for item in request.messages
-            if item.role != "system"
         ]
 
         payload = {
@@ -44,9 +39,9 @@ class GeminiProvider(BaseLLMProvider):
             },
         }
 
-        if system_messages:
+        if request.system_policy is not None:
             payload["systemInstruction"] = {
-                "parts": [{"text": "\n".join(system_messages)}]
+                "parts": [{"text": request.system_policy}]
             }
 
         url = (
@@ -68,14 +63,16 @@ class GeminiProvider(BaseLLMProvider):
                 raise ProviderError(
                     self.provider_name,
                     code="http_error",
-                    retryable=response.status_code in (408, 429, 500, 502, 503, 504),
+                    retryable=response.status_code
+                    in (408, 429, 500, 502, 503, 504),
                 )
 
             data = response.json()
             candidates = data.get("candidates") or []
             parts = (
                 candidates[0].get("content", {}).get("parts", [])
-                if candidates else []
+                if candidates
+                else []
             )
             content = "".join(
                 part.get("text", "")

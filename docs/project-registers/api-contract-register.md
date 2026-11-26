@@ -335,3 +335,9 @@ These API groups remain planned for subsequent implementation chapters:
 - Invalid JSON, missing or unexpected fields, unsupported evidence IDs and overlong outputs are rejected.
 - No public API contract or response schema was added by this chapter.
 - Human review remains separate; validated LLM output does not authorise or approve financial decisions.
+
+## Chapter 34 - Input and Prompt-Injection Guardrails
+
+- No new API endpoints or external API contracts were introduced.
+- Input validation, prompt-injection inspection and evidence-reference validation are internal guardrail components.
+- These components do not execute tools or authorize actions.
