@@ -37,10 +37,10 @@
 | 28 | Discrepancy detection and exception classification | Implemented discrepancy evidence generation and exception classification; 22 focused tests passed; Git milestone committed and pushed in e122983 | Completed |
 | 29 | Reconciliation status and full engine integration | Integrated independent bank-ledger and gateway-ledger tracks, matching cascade, residual classification and consolidated status calculations; 10 focused tests and 358 full-suite tests passed; Git milestone committed and pushed in e122983 | Completed |
 | 30 | Audit event model and hash-chain writer | Implemented append-only tenant audit chain; 362 full-suite tests passed; commit a7288a9 pushed | Completed |
-| 31 | Human approval workflow | Implemented review queue, evidence view, approve/modify/reject decisions, permission enforcement, transactional audit and idempotency; 22 focused tests passed; documentation and Git closure pending | Implementation Verified |
+| 31 | Human approval workflow | Implemented review queue, evidence view, approve/modify/reject decisions, permission enforcement, transactional audit and idempotency; 22 focused tests passed; commit 0f5a18f pushed | Completed |
 | 32 | LLM gateway and provider adapters | Implemented and verified; commit 08ddcdf pushed to origin/main | Completed |
-| 33 | Prompt registry and structured output | Implementation and tests verified; persistence enforcement deferred until investigation workflow exists | Implementation Verified - Integration Deferred |
-| 34 | Input and prompt-injection guardrails | Implementation and tests verified; documentation and Git closure pending | Implementation Verified |
+| 33 | Prompt registry and structured output | Implemented and verified; 15 focused tests passed; commit 8605a0b pushed; persistence enforcement deferred until investigation workflow exists | Completed - Integration Deferred |
+| 34 | Input and prompt-injection guardrails | Implemented and verified; 32 focused tests passed; full suite 447 passed; commit f4c55ad pushed | Completed |
 | 35-39 | Agents and orchestration | Pending implementation and verification | Not Started |
 | 40-42 | Workers and reporting | Pending implementation and verification | Not Started |
 | 43-46 | Frontend | Pending implementation and verification | Not Started |
@@ -721,7 +721,7 @@
 
 ## Chapter 31 Verification - Human Approval Workflow
 
-**Status:** Implementation verified; documentation and Git closure pending.
+**Status:** Completed; implementation, documentation and Git milestone pushed as 0f5a18f.
 
 - Implemented the tenant-scoped human review queue and review detail service.
 - Implemented approval decision validation and stable request fingerprinting.
@@ -736,11 +736,11 @@
 - Added review API and service tests.
 - Focused verification: 22 tests passed.
 - Environment variables: no additions.
-- Git checkpoint: pending.
+- Git checkpoint: committed and pushed as 0f5a18f to origin/main.
 
 ## Chapter 32 ? LLM Gateway and Provider Adapters
 
-**Implementation status:** Implemented and verified; Git milestone pending.
+**Implementation status:** Completed; commit 08ddcdf pushed to origin/main.
 
 - Implemented provider-neutral LLM gateway.
 - Added Gemini, OpenAI-compatible, Mock and local provider adapters.
@@ -751,7 +751,7 @@
 - Full backend tests: 393 passed, repeated successfully.
 - One non-blocking Starlette/httpx deprecation warning.
 - No HTTP endpoint introduced.
-- Official completion count remains 31/52 until Git closure.
+- Official completion count after this milestone: 33/52.
 
 ## Chapter 33 Verification
 
@@ -768,7 +768,7 @@
 - Focused Chapter 33 tests: 15 passed.
 - Full backend test suite: 408 passed, 1 existing Starlette/httpx deprecation warning.
 - No HTTP endpoints or environment variables introduced.
-- Documentation updated; Git checkpoint pending. Persistence enforcement will be integrated and verified with the investigation workflow.
+- Documentation and Git milestone completed in commit 8605a0b. Persistence enforcement will be integrated and verified with the investigation workflow.
 
 ## Chapter 34 - Input and Prompt-Injection Guardrails Verification
 
@@ -777,5 +777,5 @@
 - Chapter 34 input-guardrail tests: 32 passed.
 - Additional LLM security-boundary tests included in final full-suite verification.
 - Full backend suite after security-boundary changes: 447 passed, 1 existing Starlette/httpx deprecation warning.
-- Documentation and Git closure pending at the time of this record.
-- Official completed chapter count remains 32/52.
+- Documentation and Git milestone completed in commit f4c55ad.
+- Official completed chapter count: 33/52.

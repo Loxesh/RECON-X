@@ -134,15 +134,15 @@ Validation, permissions, evidence checks and human review remain mandatory safeg
 
 Total workbook chapters: 52.
 
-Officially completed: 32/52.
+Officially completed: 33/52.
 
 - Chapters 1-9 and 11-29: Completed.
 - Chapter 10: Deferred.
 - Chapter 30: Completed; implementation, documentation, 362 full-suite tests passed, and commit a7288a9 pushed to origin/main.
-- Chapter 31: Implementation and focused verification complete; 22 tests passed. Documentation and Git closure pending.
+- Chapter 31: Completed; implementation, documentation and Git milestone pushed as 0f5a18f.
 - Chapter 32: Completed; implementation and Git milestone pushed to origin/main.
-- Chapter 33: Prompt registry and structured-output validation implemented and tested; persistence enforcement deferred until the investigation workflow exists. Git checkpoint pending.
-- Chapter 34: Input and prompt-injection guardrails implemented and verified; documentation and Git closure pending.
+- Chapter 33: Completed - integration deferred; 15 focused tests passed and commit 8605a0b pushed. Persistence enforcement remains deferred until the investigation workflow exists.
+- Chapter 34: Completed; 32 focused tests passed and commit f4c55ad pushed. Full backend suite: 447 passed.
 - Chapters 35-52: Pending implementation.
 
 Chapter 30 verification:
@@ -240,11 +240,11 @@ Do not mark a chapter complete until implementation, verification, documentation
 - Full backend suite: 393 passed twice.
 - No HTTP endpoint introduced.
 - Environment settings recorded in the environment-variable register.
-- Official completed count: 32/52. Chapter 32 commit `08ddcdf` is pushed to origin/main.
+- Official completed count: 33/52. Chapter 32 commit `08ddcdf` is pushed to origin/main.
 
 ## Chapter 33 - Prompt Registry and Structured Output
 
-**Implementation status:** Implementation and verification complete; documentation and Git closure pending.
+**Implementation status:** Completed - integration deferred; implementation, documentation and Git milestone pushed as 8605a0b.
 
 - Workbook: Stage 2, page 46, Phase 5 - Governance and AI foundations.
 - Implemented versioned prompt registration and rendering.
@@ -266,5 +266,5 @@ Do not mark a chapter complete until implementation, verification, documentation
 - No API endpoints, database collections or environment variables were added.
 - Prompt-injection pattern detection is not a guarantee against every attack.
 - Human review remains required; these guardrails do not authorize actions.
-- Documentation updated; Git closure pending.
-- Official completed chapter count remains 32/52 because earlier Chapter 31 and Chapter 33 closure items remain outstanding.
+- Documentation and Git milestone completed in commit f4c55ad.
+- Official completed chapter count: 33/52. Chapters 31-34 have completed their implementation and documentation Git milestones.
