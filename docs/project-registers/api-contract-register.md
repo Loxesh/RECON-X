@@ -341,3 +341,11 @@ These API groups remain planned for subsequent implementation chapters:
 - No new API endpoints or external API contracts were introduced.
 - Input validation, prompt-injection inspection and evidence-reference validation are internal guardrail components.
 - These components do not execute tools or authorize actions.
+
+
+## Chapter 37 - Matching and Investigation Agents
+
+- No HTTP endpoints or public API contracts introduced.
+- Both agents are internal components; the matching agent delegates to the deterministic engine.
+- Investigation uses the existing LLM gateway and evidence guardrails.
+- Human in the Loop decision authority remains unchanged.

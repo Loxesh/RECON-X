@@ -115,3 +115,10 @@ Real credentials remain only in the ignored local .env file.
 
 - No new environment variables were introduced.
 - Existing Chapter 32 LLM configuration remains unchanged.
+
+
+## Chapter 37 - Matching and Investigation Agents
+
+- No new environment variables introduced.
+- Existing LLM gateway configuration is reused.
+- Investigation usage context is injected; no pricing configuration was added.

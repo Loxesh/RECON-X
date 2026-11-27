@@ -440,3 +440,17 @@ backend/tests/test_header_mapping.py	Header mapping, source-specific aliases, am
 - No new API endpoints or database collections introduced.
 - No new application environment variables introduced.
 - `pytest-asyncio` installed as a development/test dependency for asynchronous tests.
+
+
+## Chapter 37 Additions - Matching and Investigation Agents
+
+| File | Purpose |
+|---|---|
+| backend/app/agents/matching_agent/__init__.py | Matching Agent package exports |
+| backend/app/agents/matching_agent/schemas.py | Matching Agent schemas |
+| backend/app/agents/matching_agent/agent.py | Deterministic engine delegation |
+| backend/app/agents/investigation_agent/__init__.py | Investigation Agent package exports |
+| backend/app/agents/investigation_agent/schemas.py | Investigation Agent schemas |
+| backend/app/agents/investigation_agent/agent.py | Evidence-backed LLM investigation |
+| backend/tests/test_matching_agent.py | Matching Agent tests |
+| backend/tests/test_investigation_agent.py | Investigation Agent tests |

@@ -43,7 +43,8 @@
 | 34 | Input and prompt-injection guardrails | Implemented and verified; 32 focused tests passed; full suite 447 passed; commit f4c55ad pushed | Completed |
 | 35 | Agent base class and tool permission registry | Implemented, verified and pushed; 10 focused tests and 457 full-suite tests passed; commit a1b3e16 | Completed |
 | 36 | Data and Research Agents | Implemented, verified and pushed; 6 focused tests and 463 full-suite tests passed; commit b73a281 | Completed |
-| 37-39 | Agents and orchestration | Pending implementation and verification | Not Started |
+| 37 | Matching and Investigation Agents | Implemented and verified; 469 full-suite tests passed; implementation commit c2e5a0a pushed | Completed |
+| 38-39 | Risk, Validation, Reporting and Communication Agents | Pending implementation and verification | Not Started |
 | 40-42 | Workers and reporting | Pending implementation and verification | Not Started |
 | 43-46 | Frontend | Pending implementation and verification | Not Started |
 | 47-48 | Integration | Pending implementation and verification | Not Started |
@@ -843,3 +844,13 @@
 - Documentation update: Included in this milestone.
 - Git implementation and documentation milestone: b73a281, pushed to origin/main and verified.
 - Official Chapter 36 completion: Completed.
+
+
+## Chapter 37 - Matching and Investigation Agents Verification
+
+- Matching Agent delegates to the deterministic reconciliation engine.
+- Investigation Agent uses the existing LLM gateway and validates evidence citations.
+- No new API endpoints, database collections or environment variables.
+- Focused and full backend verification: 469 passed, 1 existing warning.
+- Implementation commit c2e5a0a pushed to origin/main.
+- Documentation closure is being recorded in this milestone.

@@ -298,3 +298,15 @@ Do not mark a chapter complete until implementation, verification, documentation
 - Full backend suite: 463 passed, 1 existing warning.
 - No new API endpoints, database collections or application environment variables.
 - Chapter 36 implementation and documentation milestone: recorded for Git closure.
+
+
+## Chapter 37 - Matching and Investigation Agents
+
+**Implementation and Git status:** Implemented, verified and pushed; documentation closure in this milestone.
+
+- Matching Agent delegates to the deterministic reconciliation engine.
+- Investigation Agent prepares evidence-backed explanations through the existing LLM gateway.
+- Full backend suite: 469 passed, 1 existing warning.
+- No new API endpoints, database collections or environment variables.
+- Implementation commit: c2e5a0a.
+- Current official completion after documentation closure: 37/52.
