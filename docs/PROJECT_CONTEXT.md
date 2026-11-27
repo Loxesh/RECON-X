@@ -1,5 +1,5 @@
 
-# RECON X â€“ Project Context
+# RECON X Ã¢â‚¬â€œ Project Context
 
 **Last Updated:** 26 November 2026
 
@@ -122,19 +122,19 @@ Validation, permissions, evidence checks and human review remain mandatory safeg
 
 ## 7. Repository Structure
 
-- `backend/` â€“ FastAPI application and backend modules.
-- `frontend/` â€“ React application.
-- `docker/` â€“ Local service configuration.
-- `scripts/` â€“ Utility scripts.
-- `sample_data/` â€“ Development sample data.
-- `docs/` â€“ Architecture, operations and project registers.
-- `.github/workflows/` â€“ CI workflow configuration.
+- `backend/` Ã¢â‚¬â€œ FastAPI application and backend modules.
+- `frontend/` Ã¢â‚¬â€œ React application.
+- `docker/` Ã¢â‚¬â€œ Local service configuration.
+- `scripts/` Ã¢â‚¬â€œ Utility scripts.
+- `sample_data/` Ã¢â‚¬â€œ Development sample data.
+- `docs/` Ã¢â‚¬â€œ Architecture, operations and project registers.
+- `.github/workflows/` Ã¢â‚¬â€œ CI workflow configuration.
 
 ## 8. Implementation Progress
 
 Total workbook chapters: 52.
 
-Officially completed: 33/52.
+Officially completed: 34/52.
 
 - Chapters 1-9 and 11-29: Completed.
 - Chapter 10: Deferred.
@@ -143,8 +143,9 @@ Officially completed: 33/52.
 - Chapter 32: Completed; implementation and Git milestone pushed to origin/main.
 - Chapter 33: Completed - integration deferred; 15 focused tests passed and commit 8605a0b pushed. Persistence enforcement remains deferred until the investigation workflow exists.
 - Chapter 34: Completed; 32 focused tests passed and commit f4c55ad pushed. Full backend suite: 447 passed.
-- Chapter 35: Implementation verified; 10 focused tests passed and full backend suite 457 passed. Documentation and Git closure pending.
-- Chapters 36-52: Pending implementation.
+- Chapter 35: Completed; 10 focused tests and 457 full-suite tests passed; implementation commit a1b3e16 pushed to origin/main.
+- Chapter 36: Implementation verified; 6 focused tests and 463 full-suite tests passed. Documentation prepared; Git closure pending.
+- Chapters 37-52: Pending implementation.
 
 Chapter 30 verification:
 - Audit-chain focused tests: 4 passed.
@@ -282,3 +283,18 @@ Do not mark a chapter complete until implementation, verification, documentation
 - Full backend suite: 457 passed, 1 existing deprecation warning.
 - No new API endpoints, database collections, environment variables or dependencies.
 - Official completed count remains 33/52 until Git closure is verified.
+
+
+## Chapter 36 - Data and Research Agents
+
+**Implementation status:** Verified.
+
+- Data Agent inspects canonical normalized transactions for data-quality issues.
+- Research Agent retrieves tenant-scoped historical exceptions, reconciliation jobs and rule history.
+- Research identity is derived from trusted agent execution context.
+- Tool access is restricted through explicit agent permissions.
+- Current-job records are excluded from historical retrieval.
+- Focused tests: 6 passed.
+- Full backend suite: 463 passed, 1 existing warning.
+- No new API endpoints, database collections or application environment variables.
+- Chapter 36 implementation and documentation milestone: recorded for Git closure.

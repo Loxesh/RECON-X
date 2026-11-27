@@ -418,3 +418,25 @@ backend/tests/test_header_mapping.py	Header mapping, source-specific aliases, am
 
 - No API endpoints, database collections or environment variables were introduced.
 - No new dependencies were introduced.
+
+## Chapter 36 Additions - Data and Research Agents
+
+| File | Purpose |
+|---|---|
+| `backend/app/agents/data_agent/__init__.py` | Data Agent package exports |
+| `backend/app/agents/data_agent/schemas.py` | Data Agent input, quality finding and output schemas |
+| `backend/app/agents/data_agent/agent.py` | Canonical transaction data quality inspection |
+| `backend/app/agents/research_agent/__init__.py` | Research Agent package exports |
+| `backend/app/agents/research_agent/schemas.py` | Research Agent input, evidence and output schemas |
+| `backend/app/agents/research_agent/agent.py` | Tenant-scoped historical research orchestration |
+| `backend/app/knowledge/__init__.py` | Knowledge package exports |
+| `backend/app/knowledge/schemas.py` | Historical research query and result schemas |
+| `backend/app/knowledge/research_service.py` | Tenant-scoped historical retrieval |
+| `backend/app/knowledge/tool_setup.py` | Research tool registration and agent permissions |
+| `backend/tests/test_data_agent.py` | Data Agent quality inspection tests |
+| `backend/tests/test_research_agent.py` | Research Agent and tool permission tests |
+| `backend/tests/test_research_knowledge_service.py` | Tenant filtering and current-job exclusion tests |
+
+- No new API endpoints or database collections introduced.
+- No new application environment variables introduced.
+- `pytest-asyncio` installed as a development/test dependency for asynchronous tests.

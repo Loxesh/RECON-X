@@ -41,7 +41,7 @@
 | 32 | LLM gateway and provider adapters | Implemented and verified; commit 08ddcdf pushed to origin/main | Completed |
 | 33 | Prompt registry and structured output | Implemented and verified; 15 focused tests passed; commit 8605a0b pushed; persistence enforcement deferred until investigation workflow exists | Completed - Integration Deferred |
 | 34 | Input and prompt-injection guardrails | Implemented and verified; 32 focused tests passed; full suite 447 passed; commit f4c55ad pushed | Completed |
-| 35 | Agent base class and tool permission registry | Implemented and verified; 10 focused tests and 457 full-suite tests passed; Git closure pending | Implementation Verified - Closure Pending |
+| 35 | Agent base class and tool permission registry | Implemented, verified and pushed; 10 focused tests and 457 full-suite tests passed; commit a1b3e16 | Completed |
 | 36-39 | Agents and orchestration | Pending implementation and verification | Not Started |
 | 40-42 | Workers and reporting | Pending implementation and verification | Not Started |
 | 43-46 | Frontend | Pending implementation and verification | Not Started |
@@ -331,8 +331,8 @@
 | Chapter 14 authentication | `06ee6c6` |
 | Chapter 15 RBAC | `ff257fe` |
 | Chapter 16 API infrastructure | `effc53c` |
-| Chapters 18Ã¢â‚¬â€œ19 implementation | `2a40573` |
-| Chapters 18Ã¢â‚¬â€œ19 documentation closure | `5cec76f` |
+| Chapters 18ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“19 implementation | `2a40573` |
+| Chapters 18ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“19 documentation closure | `5cec76f` |
 | Chapter 20 implementation and verification | `24eca0b` |
 
 ## Chapter 20 Verification
@@ -451,14 +451,14 @@
 
 ---
 
-## Chapter 23 Verification Ã¢â‚¬â€ Matching Data Contracts and Ruleset Configuration
+## Chapter 23 Verification ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Matching Data Contracts and Ruleset Configuration
 
 - Created `backend/app/reconciliation/` package.
 - Implemented immutable matching transaction and pair input schemas.
 - Implemented matching outcome, rule identifier, evidence and result schemas.
 - Implemented configurable matching ruleset with the approved starting defaults:
-  - Bank-ledger date window: Ã‚Â±2 days.
-  - Gateway-ledger date window: Ã‚Â±3 days.
+  - Bank-ledger date window: Ãƒâ€šÃ‚Â±2 days.
+  - Gateway-ledger date window: Ãƒâ€šÃ‚Â±3 days.
   - Auto-confirm amount tolerance: 0.00.
   - Suggested amount tolerance: 1.00.
   - Fuzzy matching threshold: 0.85.
@@ -527,7 +527,7 @@
 
 **Chapter 24 implementation, verification, documentation and Git checkpoints are complete.**
 
-## Chapter 25 Verification Ã¢â‚¬â€œ Fuzzy Candidate Matching
+## Chapter 25 Verification ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ Fuzzy Candidate Matching
 
 ### Implementation
 
@@ -536,7 +536,7 @@
 - Added configurable fuzzy similarity threshold from the matching ruleset.
 - Enforced configured suggested amount tolerance.
 - Enforced source-specific transaction date windows.
-- Restricted supported cross-source pairs to BANKÃ¢â‚¬â€œLEDGER and GATEWAYÃ¢â‚¬â€œLEDGER.
+- Restricted supported cross-source pairs to BANKÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“LEDGER and GATEWAYÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“LEDGER.
 - Enforced currency equality, unique transaction IDs and UTC-aware dates.
 - Implemented deterministic candidate ordering.
 - Implemented AMBIGUOUS outcomes for tied highest-scoring candidates.
@@ -560,13 +560,13 @@
 - Git implementation and documentation milestone: Commit `066e5df`, pushed to origin/main.
 
 **Chapter 25 implementation, verification, documentation and Git milestone are complete.**
-## Chapter 26 Verification Ã¢â‚¬â€œ Aggregate and One-to-Many Matching
+## Chapter 26 Verification ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ Aggregate and One-to-Many Matching
 
 ### Implementation
 
 - Created `backend/app/reconciliation/aggregate_match.py`.
 - Implemented explicit one-to-many and many-to-one candidate group evaluation.
-- Enforced supported BANKÃ¢â‚¬â€œLEDGER and GATEWAYÃ¢â‚¬â€œLEDGER source pairs.
+- Enforced supported BANKÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“LEDGER and GATEWAYÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“LEDGER source pairs.
 - Enforced unique transaction IDs and consistent source types within grouped transactions.
 - Enforced currency equality and configured date windows.
 - Calculated aggregate totals using exact Decimal arithmetic.
@@ -592,7 +592,7 @@
 
 **Chapter 26 implementation, verification, documentation and Git milestone are complete.**
 
-## Chapter 27 Verification â€” Duplicate and Missing Detection
+## Chapter 27 Verification Ã¢â‚¬â€ Duplicate and Missing Detection
 
 ### Implementation
 
@@ -602,7 +602,7 @@
 - Implemented DUPLICATE and REFERENCE_CONFLICT classifications.
 - Duplicate detection flags records and never deletes transactions.
 - Created `backend/app/reconciliation/missing_detector.py`.
-- Implemented source-presence comparison for BANKâ€“LEDGER and GATEWAYâ€“LEDGER.
+- Implemented source-presence comparison for BANKÃ¢â‚¬â€œLEDGER and GATEWAYÃ¢â‚¬â€œLEDGER.
 - Implemented MISSING_FROM_BANK, MISSING_FROM_LEDGER and MISSING_FROM_GATEWAY classifications.
 - Included transaction identifiers and source information in evidence.
 - Implemented deterministic result ordering.
@@ -624,7 +624,7 @@
 - Documentation update: Completed.
 - Git implementation and documentation milestone: Commit c7369e0, pushed to origin/main.
 
-## Chapter 28 Verification â€” Discrepancy Detection and Exception Classification
+## Chapter 28 Verification Ã¢â‚¬â€ Discrepancy Detection and Exception Classification
 
 ### Implementation
 
@@ -806,6 +806,38 @@
 ### Closure Status
 
 - Implementation verification: Passed.
-- Documentation update: Pending final review.
-- Git implementation and documentation milestone: Pending.
-- Official completed chapter count remains 33/52 until Git closure is verified.
+- Documentation update: Completed in the Chapter 36 closure milestone.
+- Git implementation commit: a1b3e16 (pushed to origin/main).
+- Chapter 35 implementation commit is pushed; final documentation closure is included in the current milestone.
+
+
+## Chapter 36 - Data and Research Agents Verification
+
+### Implementation
+
+- Created `backend/app/agents/data_agent/` with input/output schemas and agent implementation.
+- Implemented canonical transaction quality inspection.
+- Added findings for invalid records, validation errors and missing normalized fields.
+- Included transaction evidence IDs in quality findings.
+- Created `backend/app/agents/research_agent/` with input/output schemas and agent implementation.
+- Created `backend/app/knowledge/` with research schemas, tenant-scoped retrieval service and tool registration.
+- Reused existing exception and reconciliation job repositories.
+- Derived organization identity from trusted `AgentContext`.
+- Enforced explicit research tool permissions through the tool registry.
+- Excluded the current job from historical retrieval.
+- Kept research retrieval tenant-scoped.
+- No LLM, parsing or normalization ownership added.
+- No new API endpoints, database collections or application environment variables.
+
+### Verification
+
+- Focused Chapter 36 tests: 6 passed.
+- Full backend test suite: 463 passed, 1 existing Starlette/httpx deprecation warning.
+- Verified tenant filters and current-job exclusions through automated tests.
+- These tests verify query construction; live MongoDB integration isolation was not claimed.
+
+### Closure Status
+
+- Implementation verification: Passed.
+- Documentation update: Included in this milestone.
+- Git implementation and documentation milestone: Pending push verification.

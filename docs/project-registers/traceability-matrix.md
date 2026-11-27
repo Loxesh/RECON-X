@@ -41,3 +41,24 @@
 - No new API endpoints, database collections or environment variables.
 - Pattern-based prompt-injection detection cannot guarantee detection of every possible attack.
 - Documentation updated; Git closure pending.
+
+## Chapter 36 - Data and Research Agents
+
+| Workbook requirement | Implementation | Verification | Status |
+|---|---|---|---|
+| Inspect canonical normalized transactions | `backend/app/agents/data_agent/agent.py` | Canonical record quality and invalid-record tests | Verified |
+| Identify missing normalized fields and validation problems | Data Agent quality findings and flags | Missing-field and validation-error tests | Verified |
+| Include evidence identifiers in quality findings | Data Agent output schemas | Evidence ID assertions | Verified |
+| Retrieve historical exceptions | `backend/app/knowledge/research_service.py` | Tenant filter and historical exception tests | Verified |
+| Retrieve historical reconciliation jobs | Research knowledge service | Tenant filter and current-job exclusion tests | Verified |
+| Retrieve historical rule context | Research knowledge service | Tenant filter and current-job exclusion tests | Verified |
+| Enforce tenant isolation | Existing tenant repositories and trusted `AgentContext` | Automated MongoDB query-filter assertions | Verified at query-construction level |
+| Restrict research tools to the Research Agent | `backend/app/knowledge/tool_setup.py` and `backend/app/agents/tool_registry.py` | Tool permission tests | Verified |
+
+### Chapter 36 Verification Record
+
+- Workbook source: `RECON_X_Stage2_Implementation_Workbook(4).pdf`, Chapter 36, page 49.
+- Focused tests: 6 passed.
+- Full backend suite: 463 passed, 1 existing Starlette/httpx deprecation warning.
+- No live MongoDB integration isolation test claimed.
+- No new API endpoints, collections or application environment variables.
