@@ -407,3 +407,14 @@ backend/tests/test_header_mapping.py	Header mapping, source-specific aliases, am
 
 - No new API endpoints, database collections or environment variables were introduced.
 - Prompt-injection detection uses deterministic patterns and does not guarantee detection of every possible attack.
+## Chapter 35 Additions - Agent Base Class and Tool Permission Registry
+
+| File | Purpose |
+|---|---|
+| `backend/app/agents/__init__.py` | Agent package exports |
+| `backend/app/agents/base_agent.py` | Shared agent execution context, typed results, validation and timeout handling |
+| `backend/app/agents/tool_registry.py` | Deny-by-default tool registry and per-agent permission enforcement |
+| `backend/tests/test_agent_base.py` | Agent execution and tool permission tests |
+
+- No API endpoints, database collections or environment variables were introduced.
+- No new dependencies were introduced.

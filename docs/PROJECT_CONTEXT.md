@@ -143,7 +143,8 @@ Officially completed: 33/52.
 - Chapter 32: Completed; implementation and Git milestone pushed to origin/main.
 - Chapter 33: Completed - integration deferred; 15 focused tests passed and commit 8605a0b pushed. Persistence enforcement remains deferred until the investigation workflow exists.
 - Chapter 34: Completed; 32 focused tests passed and commit f4c55ad pushed. Full backend suite: 447 passed.
-- Chapters 35-52: Pending implementation.
+- Chapter 35: Implementation verified; 10 focused tests passed and full backend suite 457 passed. Documentation and Git closure pending.
+- Chapters 36-52: Pending implementation.
 
 Chapter 30 verification:
 - Audit-chain focused tests: 4 passed.
@@ -162,7 +163,7 @@ Chapter 30 is complete. The local and origin/main commit hashes match.
 
 ## 9. Chapter 31 - Human Approval Workflow
 
-**Implementation status:** Verified; Git milestone pending.
+**Implementation status:** Completed; implementation, documentation and Git milestone pushed as 0f5a18f.
 
 - Review queue and tenant-scoped review detail retrieval implemented.
 - Evidence data exposed through the review detail response.
@@ -175,7 +176,7 @@ Chapter 30 is complete. The local and origin/main commit hashes match.
 - Terminal decisions update exception status history.
 - Focused verification: 22 tests passed.
 - No new environment variables introduced.
-- Official completion count remains 30/52 until documentation and Git closure are verified.
+- Chapter 31 implementation, documentation and Git milestone are complete.
 
 ## 10. Current Reconciliation Modules
 
@@ -230,7 +231,7 @@ Do not mark a chapter complete until implementation, verification, documentation
 
 ## Chapter 32 ? LLM Gateway and Provider Adapters
 
-**Implementation status:** Implemented and verified; Git milestone pending.
+**Implementation status:** Completed; commit 08ddcdf pushed to origin/main.
 
 - Chapter 32 of 52 ? Phase 5, Governance and AI foundations.
 - Implemented provider-neutral gateway and Gemini, OpenAI-compatible, Mock and local adapters.
@@ -268,3 +269,16 @@ Do not mark a chapter complete until implementation, verification, documentation
 - Human review remains required; these guardrails do not authorize actions.
 - Documentation and Git milestone completed in commit f4c55ad.
 - Official completed chapter count: 33/52. Chapters 31-34 have completed their implementation and documentation Git milestones.
+## Chapter 35 - Agent Base Class and Tool Permission Registry
+
+**Implementation status:** Verified; documentation and Git closure pending.
+
+- Implemented shared agent execution context, typed results and status contracts.
+- Added Pydantic input/output validation and execution timeout handling.
+- Added deny-by-default tool registry with agent-specific permissions.
+- Added tool input/output validation and timeout enforcement.
+- Kept agent tool permissions separate from application RBAC.
+- Focused tests: 10 passed.
+- Full backend suite: 457 passed, 1 existing deprecation warning.
+- No new API endpoints, database collections, environment variables or dependencies.
+- Official completed count remains 33/52 until Git closure is verified.

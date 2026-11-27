@@ -41,7 +41,8 @@
 | 32 | LLM gateway and provider adapters | Implemented and verified; commit 08ddcdf pushed to origin/main | Completed |
 | 33 | Prompt registry and structured output | Implemented and verified; 15 focused tests passed; commit 8605a0b pushed; persistence enforcement deferred until investigation workflow exists | Completed - Integration Deferred |
 | 34 | Input and prompt-injection guardrails | Implemented and verified; 32 focused tests passed; full suite 447 passed; commit f4c55ad pushed | Completed |
-| 35-39 | Agents and orchestration | Pending implementation and verification | Not Started |
+| 35 | Agent base class and tool permission registry | Implemented and verified; 10 focused tests and 457 full-suite tests passed; Git closure pending | Implementation Verified - Closure Pending |
+| 36-39 | Agents and orchestration | Pending implementation and verification | Not Started |
 | 40-42 | Workers and reporting | Pending implementation and verification | Not Started |
 | 43-46 | Frontend | Pending implementation and verification | Not Started |
 | 47-48 | Integration | Pending implementation and verification | Not Started |
@@ -779,3 +780,32 @@
 - Full backend suite after security-boundary changes: 447 passed, 1 existing Starlette/httpx deprecation warning.
 - Documentation and Git milestone completed in commit f4c55ad.
 - Official completed chapter count: 33/52.
+## Chapter 35 Verification - Agent Base Class and Tool Permission Registry
+
+### Implementation
+
+- Created `backend/app/agents/__init__.py`.
+- Created `backend/app/agents/base_agent.py`.
+- Created `backend/app/agents/tool_registry.py`.
+- Created `backend/tests/test_agent_base.py`.
+- Implemented typed agent execution context, status and result contracts.
+- Implemented Pydantic input and output validation.
+- Implemented execution timing and bounded timeouts.
+- Implemented deny-by-default tool registration and per-agent allowlists.
+- Implemented explicit tool grants and revocation.
+- Kept agent tool capabilities separate from application user RBAC.
+- Preserved the existing AgentExecutionDocument model.
+- No API endpoints, database collections or environment variables introduced.
+
+### Verification
+
+- Chapter 35 focused tests: 10 passed.
+- Full backend test suite: 457 passed.
+- One existing Starlette/httpx TestClient deprecation warning remains.
+
+### Closure Status
+
+- Implementation verification: Passed.
+- Documentation update: Pending final review.
+- Git implementation and documentation milestone: Pending.
+- Official completed chapter count remains 33/52 until Git closure is verified.
