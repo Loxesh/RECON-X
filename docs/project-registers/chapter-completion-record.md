@@ -1,7 +1,7 @@
 
 # RECON X - Chapter Completion Record
 
-**Last Updated:** 26 November 2026
+**Last Updated:** 27 November 2026
 
 ## Chapter Progress Summary
 
@@ -42,7 +42,8 @@
 | 33 | Prompt registry and structured output | Implemented and verified; 15 focused tests passed; commit 8605a0b pushed; persistence enforcement deferred until investigation workflow exists | Completed - Integration Deferred |
 | 34 | Input and prompt-injection guardrails | Implemented and verified; 32 focused tests passed; full suite 447 passed; commit f4c55ad pushed | Completed |
 | 35 | Agent base class and tool permission registry | Implemented, verified and pushed; 10 focused tests and 457 full-suite tests passed; commit a1b3e16 | Completed |
-| 36-39 | Agents and orchestration | Pending implementation and verification | Not Started |
+| 36 | Data and Research Agents | Implemented, verified and pushed; 6 focused tests and 463 full-suite tests passed; commit b73a281 | Completed |
+| 37-39 | Agents and orchestration | Pending implementation and verification | Not Started |
 | 40-42 | Workers and reporting | Pending implementation and verification | Not Started |
 | 43-46 | Frontend | Pending implementation and verification | Not Started |
 | 47-48 | Integration | Pending implementation and verification | Not Started |
@@ -840,4 +841,5 @@
 
 - Implementation verification: Passed.
 - Documentation update: Included in this milestone.
-- Git implementation and documentation milestone: Pending push verification.
+- Git implementation and documentation milestone: b73a281, pushed to origin/main and verified.
+- Official Chapter 36 completion: Completed.

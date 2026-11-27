@@ -1,6 +1,6 @@
 # RECON X - Requirements Traceability Matrix
 
-**Last Updated:** 26 November 2026
+**Last Updated:** 27 November 2026
 
 ## Chapter 33 - Prompt Registry and Structured Output
 
@@ -62,3 +62,11 @@
 - Full backend suite: 463 passed, 1 existing Starlette/httpx deprecation warning.
 - No live MongoDB integration isolation test claimed.
 - No new API endpoints, collections or application environment variables.
+### Chapter 36 Closure
+
+- Implementation verification: Passed.
+- Focused tests: 6 passed.
+- Full backend suite: 463 passed, 1 existing Starlette/httpx deprecation warning.
+- Tenant isolation verified at query-construction level; live MongoDB integration isolation was not claimed.
+- Git implementation and documentation milestone: b73a281, pushed to origin/main and verified.
+- Official Chapter 36 status: Completed.

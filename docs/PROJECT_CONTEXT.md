@@ -1,7 +1,7 @@
 
 # RECON X Ã¢â‚¬â€œ Project Context
 
-**Last Updated:** 26 November 2026
+**Last Updated:** 27 November 2026
 
 ## 1. Project Overview
 
@@ -134,7 +134,7 @@ Validation, permissions, evidence checks and human review remain mandatory safeg
 
 Total workbook chapters: 52.
 
-Officially completed: 34/52.
+Officially completed: 35/52.
 
 - Chapters 1-9 and 11-29: Completed.
 - Chapter 10: Deferred.
@@ -144,7 +144,7 @@ Officially completed: 34/52.
 - Chapter 33: Completed - integration deferred; 15 focused tests passed and commit 8605a0b pushed. Persistence enforcement remains deferred until the investigation workflow exists.
 - Chapter 34: Completed; 32 focused tests passed and commit f4c55ad pushed. Full backend suite: 447 passed.
 - Chapter 35: Completed; 10 focused tests and 457 full-suite tests passed; implementation commit a1b3e16 pushed to origin/main.
-- Chapter 36: Implementation verified; 6 focused tests and 463 full-suite tests passed. Documentation prepared; Git closure pending.
+- Chapter 36: Completed; Data and Research Agents implemented and verified; 6 focused tests and 463 full-suite tests passed; commit b73a281 pushed to origin/main.
 - Chapters 37-52: Pending implementation.
 
 Chapter 30 verification:
